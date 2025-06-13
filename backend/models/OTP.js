@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const mailSender = require("../utils/mailSender");
 
-const otpSchema = new mongoose.Schema({
+const OtpSchema = new mongoose.Schema({
     email: {
         type: String,
         required: true
@@ -13,7 +13,7 @@ const otpSchema = new mongoose.Schema({
     createdAt: {
         type: Date,
         default: Date.now,
-        exprire: 300
+        exprires: 300
     }
 });
 
@@ -33,4 +33,4 @@ otpSchema.pre("save", async function(next){
     next();
 })
 
-module.exports = mongoose.model("OTP", otpSchema);
+module.exports = mongoose.model("OTP", OtpSchema);

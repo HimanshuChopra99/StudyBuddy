@@ -33,3 +33,66 @@ exports.auth = async (req, res, next) => {
     });
   }
 };
+
+//isStudent 
+exports.isStudent = async (req, res, next) => {
+  try {
+    const role = req.user.role;
+    if(role !== "Student") {
+      return res.status(403).json({
+        success: false,
+        message: "Access denied: Student role required",
+      });
+    }
+
+    next();
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      success: false,
+      msg: "User role can't be verified, please try again"
+    });
+  }
+}
+
+//isInstructor
+exports.isInstructor = async (req, res, next) => {
+  try {
+    const role = req.user.role;
+    if(role !== "Instructor") {
+      return res.status(403).json({
+        success: false,
+        message: "Access denied: Instructor role required",
+      });
+    }
+
+    next();
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      success: false,
+      msg: "User role can't be verified, please try again"
+    });
+  }
+}
+
+//isAdmin
+exports.isAdmin = async (req, res, next) => {
+  try {
+    const role = req.user.role;
+    if(role !== "Admin") {
+      return res.status(403).json({
+        success: false,
+        message: "Access denied: Admin role required",
+      });
+    }
+
+    next();
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      success: false,
+      msg: "User role can't be verified, please try again"
+    });
+  }
+}

@@ -3,6 +3,7 @@ const Tag = require("../models/Category");
 const User = require("../models/User");
 const { uploadImageToCloudinary } = require("../utils/imageUploader");
 const { courseSchema } = require("../validation/courses");
+const Category = require("../models/Category");
 
 exports.createCourse = async (req, res) => {
   try {
@@ -16,7 +17,7 @@ exports.createCourse = async (req, res) => {
       });
     }
 
-    const { courseName, courseDescription, whatYouWillLearn, price, tag } =
+    const { courseName, courseDescription, whatYouWillLearn, price, category, tag } =
       parsedBody.data;
 
     //get thumbnail
@@ -42,11 +43,11 @@ exports.createCourse = async (req, res) => {
       });
     }
 
-    const tagDetails = await Tag.findById(tag);
-    if (!tagDetails) {
+    const categoryDetails = await Category.findById(category);
+    if (!categoryDetails) {
       return res.status(404).json({
         success: false,
-        msg: "Tag not found",
+        msg: "category not found",
       });
     }
 
@@ -63,7 +64,8 @@ exports.createCourse = async (req, res) => {
       instructor: instructor._id,
       whatYouWillLearn,
       price,
-      tag: tagDetails._id,
+      category: categoryDetails._id,
+      tag,
       thumbnail: thumbnailImage.secure_url,
     });
 
@@ -79,7 +81,7 @@ exports.createCourse = async (req, res) => {
     );
 
     //update tag schema
-    await Tag.findByIdAndUpdate(
+    await Category.findByIdAndUpdate(
       { _id: tagDetails._id },
       {
         $push: {

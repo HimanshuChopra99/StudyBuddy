@@ -6,6 +6,8 @@ const courseSchema = zod.object({
   price: z.number().positive(),
   whatYouWillLearn: zod.string(),
   tag: zod.string().min(1),
+  status: zod.string(),
+  instructions: zod.string()
 });
 
 module.exports = {

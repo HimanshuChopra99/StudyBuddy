@@ -1,7 +1,7 @@
 exports.contactUsEmail = (
     email,
-    firstname,
-    lastname,
+    firstName,
+    lastName,
     message,
     phoneNo,
     countrycode
@@ -78,7 +78,7 @@ exports.contactUsEmail = (
                     src="" alt="StudyBuddy Logo"></a>
             <div class="message">Contact Form Confirmation</div>
             <div class="body">
-                <p>Dear ${firstname} ${lastname},</p>
+                <p>Dear ${firstName} ${lastName},</p>
                 <p>Thank you for contacting us. We have received your message and will respond to you as soon as possible.
                 </p>
                 <p>Here are the details you provided:</p>

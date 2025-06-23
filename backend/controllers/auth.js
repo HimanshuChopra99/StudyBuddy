@@ -23,9 +23,8 @@ exports.sendotp = async (req, res) => {
 
     //generate otp
     let otp = otpGenerator.generate(6, {
-      digits: true,
-      alphabets: false,
-      upperCase: false,
+      upperCaseAlphabets: false,
+      lowerCaseAlphabets: false,
       specialChars: false,
     });
 
@@ -45,12 +44,12 @@ exports.sendotp = async (req, res) => {
     const otpPayload = { email, otp };
 
     const otpBody = await OTP.create(otpPayload); //store otp in db
-    console.log(otpBody);
 
     //response sucessful
     res.status(200).json({
       success: true,
       msg: "OTP sent sucessfully",
+      otp
     });
   } catch (error) {
     console.error(error);
@@ -67,6 +66,8 @@ exports.signup = async (req, res) => {
     const body = req.body;
     const parsedBody = signUpSchema.safeParse(body);
 
+        console.log(parsedBody)
+
     if (!parsedBody.success) {
       return res.status(411).json({
         success: false,
@@ -80,9 +81,9 @@ exports.signup = async (req, res) => {
       email,
       password,
       accountType,
-      contactNumber,
       otp,
     } = parsedBody.data;
+
 
     //user exists
     const userExist = await User.findOne({ email });
@@ -94,15 +95,25 @@ exports.signup = async (req, res) => {
     }
 
     //recent otp
-    const recentOtp = await OTP.findOne({ email })
+    const recentOtp = await OTP.find({ email })
       .sort({ createdAt: -1 })
       .limit(1);
-    if (!recentOtp) {
+
+      console.log(recentOtp.otp)
+    if (recentOtp.length === 0) {
       return res.status(400).json({
         success: false,
-        msg: "OTP not Found",
+        msg: "OTP is not invalid",
       });
-    }
+    }  else if (otp !== recentOtp[0].otp) {
+			// Invalid OTP
+			return res.status(400).json({
+				success: false,
+				message: "The OTP is not valid",
+			});
+		}
+
+    const hashedPassword = await bcrypt.hash(password, 10);
 
     const profileDeatails = await Profile.create({
       gender: null,
@@ -111,17 +122,14 @@ exports.signup = async (req, res) => {
       contactNumber: null,
     });
 
-    const hashedPassword = await bcrypt.hash(password, 10);
-
     const user = await User.create({
       firstName,
       lastName,
       email,
-      contactNumber,
       password: hashedPassword,
       accountType,
       additionalDetails: profileDeatails._id,
-      image: `https://api.dicebear.com/9.x/initials/svg?seed=${firastName} ${lastName}`,
+      image: `https://api.dicebear.com/9.x/initials/svg?seed=${firstName}20%${lastName}`,
     });
 
     return res.status(200).json({
@@ -133,7 +141,7 @@ exports.signup = async (req, res) => {
     console.error(error);
     res.status(500).json({
       success: false,
-      msg: "User not registred. Please try again",
+      msg: "User cant't registred. Please try again",
     });
   }
 };

@@ -3,7 +3,7 @@ const app = express();
 
 const userRoutes = require("./routes/user");
 const profileRoutes = require("./routes/profile");
-// const paymentRoutes = require("./routes/payment");
+const paymentRoutes = require("./routes/payment");
 const courseRoutes = require("./routes/course");
 const contactUsRoute = require("./routes/contact");
 const database = require("./config/database");
@@ -45,7 +45,6 @@ app.use("/api/v1/course", courseRoutes);
 app.use("/api/v1/reach", contactUsRoute);
 
 //def route
-
 app.get("/", (req, res) => {
   return res.json({
     success: true,

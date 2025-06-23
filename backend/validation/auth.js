@@ -7,7 +7,6 @@ const signUpSchema = zod.object({
     password: zod.string().min(1),
     confirmPassword: zod.string().min(1),
     accountType: zod.string().min(1),
-    contactNumber: zod.string().min(10).max(10),
     otp: zod.string().min(1),
 })
 .refine((data) => data.password === data.confirmPassword, {

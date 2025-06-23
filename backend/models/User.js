@@ -1,66 +1,77 @@
 const mongoose = require("mongoose");
 const { resetPasswordToken } = require("../controllers/resetPassword");
 
-const userSchema = new mongoose.Schema({
+const userSchema = new mongoose.Schema(
+  {
     firstName: {
-        type: String,
-        required: true,
-        trim: true
+      type: String,
+      required: true,
+      trim: true,
     },
     lastName: {
-        type: String,
-        required: true,
-        trim: true
+      type: String,
+      required: true,
+      trim: true,
     },
     email: {
-        type: String,
-        required: true,
-        trim: true
+      type: String,
+      required: true,
+      trim: true,
     },
     password: {
-        type: String,
-        required: true
+      type: String,
+      required: true,
     },
-    role: {
-        type: String,
-        enum: ["Admin", "Student", "Instructor"],
-        required: true
+    accountType: {
+      type: String,
+      enum: ["Admin", "Student", "Instructor"],
+      required: true,
+    },
+    active: {
+      type: Boolean,
+      default: true,
+    },
+    approved: {
+      type: Boolean,
+      default: true,
     },
     additionalDetails: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Profile",
-        required: true
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Profile",
+      required: true,
     },
     courses: [
-        {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "Course"
-        }
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Course",
+      },
     ],
     image: {
-        type: String,
-        required: true
+      type: String,
+      required: true,
     },
     token: {
-        type: String
+      type: String,
     },
     resetPasswordExpires: {
-        type: Date
+      type: Date,
     },
     courseProgress: [
-        {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "CourseProgress"
-        }
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "CourseProgress",
+      },
     ],
     isScheduledForDeletion: {
-        type: Boolean,
-        default: false,
+      type: Boolean,
+      default: false,
     },
     deletionDate: {
-        type: Date,
-        default: null,
+      type: Date,
+      default: null,
     },
-});
+  },
+  { timestamps: true }
+);
 
 module.exports = mongoose.model("User", userSchema);

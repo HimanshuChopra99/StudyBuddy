@@ -1,6 +1,7 @@
 const Course = require("../models/Course");
 const Profile = require("../models/Profile");
 const User = require("../models/User");
+const { uploadImageToCloudinary } = require("../utils/imageUploader");
 const { profileSchema } = require("../validation/profile");
 require("dotenv").config();
 
@@ -12,7 +13,7 @@ exports.updateProfile = async (req, res) => {
 
     //profile zod validation
     const parsedBody = profileSchema.safeParse(body);
-    if (!parsedBody) {
+    if (!parsedBody.success) {
       return res.status(400).json({
         success: false,
         msg: "Incorrect profile data",
@@ -22,18 +23,11 @@ exports.updateProfile = async (req, res) => {
     //build update object
     const {
       gender,
-      dateOfBirth = "",
-      about = "",
+      dateOfBirth,
+      about,
       contactNumber,
     } = parsedBody.data;
 
-    if (!contactNumber || !about || !userId) {
-      return res.status(200).json({
-        success: true,
-        msg: "All fields are required",
-        data: updateProfile,
-      });
-    }
 
     // Get profile ID from user
     const userDetails = await User.findById(userId);
@@ -41,11 +35,11 @@ exports.updateProfile = async (req, res) => {
     const profileDetails = await Profile.findById(profileId);
 
     //Update profile
-    profileDetails.gender = gender;
-    profileDetails.dateOfBirth = dateOfBirth;
-    profileDetails.about = about;
-    profileDetails.contactNumber = contactNumber;
-    await Profile.save();
+    if(gender) profileDetails.gender = gender;
+    if(dateOfBirth) profileDetails.dateOfBirth = dateOfBirth;
+    if(about) profileDetails.about = about;
+    if(contactNumber) profileDetails.contactNumber = contactNumber;
+    await profileDetails.save();
 
     //response
     return res.status(200).json({
@@ -58,6 +52,7 @@ exports.updateProfile = async (req, res) => {
     return res.status(500).json({
       success: false,
       msg: "Failed to update profile",
+      error: error.message
     });
   }
 };
@@ -143,7 +138,8 @@ exports.updateDisplayPicture = async (req, res) => {
   } catch (error) {
     return res.status(500).json({
       success: false,
-      message: error.message,
+      msg: "Failed to update Profile Picture",
+      error: error.message
     })
   }
 }

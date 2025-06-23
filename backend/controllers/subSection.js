@@ -2,6 +2,7 @@ const Section = require("../models/Section");
 const SubSection = require("../models/SubSection");
 const { uploadImageToCloudinary } = require("../utils/imageUploader");
 const { subSectionSchema } = require("../validation/subSection");
+require("dotenv").config();
 
 //create subSection
 exports.createSubSection = async (req, res) => {
@@ -67,7 +68,7 @@ exports.createSubSection = async (req, res) => {
 };
 
 //delete subsection
-exports.deleteSection = async (req, res) => {
+exports.deleteSubSection = async (req, res) => {
   try {
     const subSectionId = req.params;
     const sectionId = req.body;

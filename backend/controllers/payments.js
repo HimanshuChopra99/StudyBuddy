@@ -2,9 +2,8 @@ const Course = require("../models/Course");
 const User = require("../models/User");
 const { instance } = require("../config/razorpay");
 const mailSender = require("../utils/mailSender");
-const {
-  courseEnrollmentEmail,
-} = require("../mail/templates/courseEnrollmentEmail");
+const { courseEnrollmentEmail } = require("../mail/templates/courseEnrollmentEmail");
+require("dotenv").config();
 
 exports.caputurPayment = async (req, res) => {
   try {
@@ -86,8 +85,8 @@ exports.caputurPayment = async (req, res) => {
   }
 };
 
-//verify payment signature
-exports.verifySignature = async (req, res) => {
+//verify payment
+exports.verifyPayment = async (req, res) => {
   try {
     const webhookSecret = process.env.RAZORPAY_WEBHOOK_SECRET;
     const body = req.body;

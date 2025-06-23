@@ -1,5 +1,6 @@
 const Course = require("../models/Course");
 const Section = require("../models/Section");
+require("dotenv").config();
 
 //create section
 exports.createSection = async (req, res) => {

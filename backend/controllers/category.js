@@ -1,5 +1,6 @@
 const Category = require("../models/Category");
 const { categorySchema } = require("../validation/category");
+require("dotenv").config();
 
 //craete category
 exports.createCategory = async (req, res) => {
@@ -57,6 +58,23 @@ exports.getAllCategory = async (req, res) => {
       msg: "Failed to get category",
     });
   }
+};
+
+//show all categories
+exports.showAllCategories = async (req, res) => {
+	try {
+        console.log("INSIDE SHOW ALL CATEGORIES");
+		const allCategorys = await Category.find({});
+		res.status(200).json({
+			success: true,
+			data: allCategorys,
+		});
+	} catch (error) {
+		return res.status(500).json({
+			success: false,
+			message: error.message,
+		});
+	}
 };
 
 //category page details

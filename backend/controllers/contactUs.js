@@ -1,5 +1,6 @@
-const Contact = require("../models/Contact");
-const contactSchema = require("../validation/contact");
+const contactSchema = require("../validation/contactUs");
+const { contactUsEmail } = require("../mail/templates/contactFormRes")
+require("dotenv").config();
 
 exports.contactUs = async (req, res) => {
   try {

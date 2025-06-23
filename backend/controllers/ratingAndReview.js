@@ -1,6 +1,7 @@
 const { default: mongoose } = require("mongoose");
 const Course = require("../models/Course");
 const RatingAndReview = require("../models/RatingAndReview");
+require("dotenv").config();
 
 exports.createRating = async (req, res) => {
   try {

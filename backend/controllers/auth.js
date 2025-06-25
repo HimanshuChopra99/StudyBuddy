@@ -66,12 +66,12 @@ exports.signup = async (req, res) => {
     const body = req.body;
     const parsedBody = signUpSchema.safeParse(body);
 
-        console.log(parsedBody)
 
     if (!parsedBody.success) {
       return res.status(411).json({
         success: false,
         msg: "invalid data",
+        error: parsedBody.error
       });
     }
 
@@ -183,7 +183,7 @@ exports.login = async (req, res) => {
     const payload = {
       email: user.email,
       id: user._id,
-      role: user.role,
+      accountType: user.accountType,
     };
 
     //genearet token

@@ -37,8 +37,8 @@ exports.auth = async (req, res, next) => {
 //isStudent 
 exports.isStudent = async (req, res, next) => {
   try {
-    const role = req.user.role;
-    if(role !== "Student") {
+    const accountType = req.user.accountType;
+    if(accountType !== "Student") {
       return res.status(403).json({
         success: false,
         message: "Access denied: Student role required",
@@ -58,8 +58,8 @@ exports.isStudent = async (req, res, next) => {
 //isInstructor
 exports.isInstructor = async (req, res, next) => {
   try {
-    const role = req.user.role;
-    if(role !== "Instructor") {
+    const accountType = req.user.accountType;
+    if(accountType !== "Instructor") {
       return res.status(403).json({
         success: false,
         message: "Access denied: Instructor role required",
@@ -79,8 +79,8 @@ exports.isInstructor = async (req, res, next) => {
 //isAdmin
 exports.isAdmin = async (req, res, next) => {
   try {
-    const role = req.user.role;
-    if(role !== "Admin") {
+    const accountType = req.user.accountType;
+    if(accountType !== "Admin") {
       return res.status(403).json({
         success: false,
         message: "Access denied: Admin role required",

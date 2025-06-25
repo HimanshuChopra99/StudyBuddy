@@ -17,18 +17,19 @@ exports.createCourse = async (req, res) => {
       return res.status(400).json({
         success: false,
         msg: "Invalid course data",
+        error: parsedBody.error.issues
       });
     }
 
-    const {
+    let {
       courseName,
       courseDescription,
       whatYouWillLearn,
       price,
       category,
-      tag: _tag,
-      status,
-      instructions: _instructions,
+      tag,
+      status: status,
+      instructions,
     } = parsedBody.data;
 
     //get thumbnail
@@ -40,8 +41,8 @@ exports.createCourse = async (req, res) => {
       });
     }
 
-    const tag = JSON.parse(_tag);
-    const instructions = JSON.parse(_instructions);
+    // const tag = JSON.parse(_tag);
+    // const instructions = JSON.parse(_instructions);
 
     if (!status || status === undefined) {
       status = "Draft";
@@ -50,7 +51,7 @@ exports.createCourse = async (req, res) => {
     //check instructor
     const userId = req.user.id;
     const instructor = await User.findOne({
-      userId,
+      _id: userId,
       accountType: "Instructor",
     });
 
@@ -102,7 +103,7 @@ exports.createCourse = async (req, res) => {
 
     //update tag schema
     await Category.findByIdAndUpdate(
-      { _id: tagDetails._id },
+      { _id: category },
       {
         $push: {
           course: newCourse._id,

@@ -1,12 +1,14 @@
 const User = require("../models/User");
 const crypto = require("crypto");
 const mailSender = require("../utils/mailSender");
+const bcrypt = require("bcrypt");
+const { passwordResetEmail } = require("../mail/templates/resetPassword");
 require("dotenv").config();
 
 //resetPasswordToken
 exports.resetPasswordToken = async (req, res) => {
   try {
-    const { email } = req.user;
+    const { email } = req.body;
 
     const user = await User.findOne({ email });
     if (!user) {
@@ -19,7 +21,7 @@ exports.resetPasswordToken = async (req, res) => {
     //generate token
     const token = crypto.randomBytes(32).toString("hex");
 
-    const updateDetails = await User.findOne(
+    const updateDetails = await User.findOneAndUpdate(
       { email },
       {
         token: token,
@@ -31,11 +33,12 @@ exports.resetPasswordToken = async (req, res) => {
     const resetLink = `http://localhost:3000/reset-password/${token}`;
 
     //send reset mail
-    await mailSender(email, "Password Reset Link", resetLink);
+    await mailSender(email, "Password Reset Link", passwordResetEmail(updateDetails.email, updateDetails.firstName, resetLink));
 
     res.status(200).json({
       success: true,
-      msg: "Reset link sent to email (check console)",
+      msg: "Reset link sent to email successfully",
+      updateDetails
     });
   } catch (error) {
     console.error(error);

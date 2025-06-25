@@ -1,6 +1,7 @@
 const cron = require("node-cron");
 const Course = require("../models/Course");
 const User = require("../models/User");
+const Profile = require("../models/Profile");
 
 cron.schedule("0 0 * * *", async () => {
   try {
@@ -18,11 +19,11 @@ cron.schedule("0 0 * * *", async () => {
       //delete from course enrolled
       if (user.courses.length > 0) {
         await Promise.all(
-          user.courses.map((courseId) => {
+          user.courses.map((courseId) =>
             Course.findByIdAndUpdate(courseId, {
               $pull: { studentsEnrolled: user._id },
-            });
-          })
+            })
+          )
         );
       }
 
@@ -32,10 +33,6 @@ cron.schedule("0 0 * * *", async () => {
     }
   } catch (error) {
     console.log(error.message);
-    return res.status(500).json({
-      success: false,
-      msg: "Failed to Scheduled account deletion",
-      error: error.message,
-    });
+    return console.log("Cron failed:", error.message);
   }
 });

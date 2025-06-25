@@ -1,13 +1,13 @@
-const zod = require("zod");
+const z = require("zod");
 
-const courseSchema = zod.object({
-  courseName: zod.string().min(1),
-  courseDescription: zod.string().min(1),
-  price: zod.number().positive(),
-  whatYouWillLearn: zod.string(),
-  tag: zod.string().min(1),
-  status: zod.string(),
-  instructions: zod.string()
+const courseSchema = z.object({
+  courseName: z.string().min(1),
+  courseDescription: z.string().min(1),
+  price: z.string(),
+  whatYouWillLearn: z.string(),
+  tag: z.string().min(1),
+  whatYouWillLearn: z.string(),
+  category: z.string()
 });
 
 module.exports = {

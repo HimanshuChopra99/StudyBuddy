@@ -19,16 +19,25 @@ exports.createCategory = async (req, res) => {
 
     const { name, description } = parsedBody.data;
 
+    const existingCategory = await Category.findOne({ name: name });
+
+    if (existingCategory) {
+      return res.status(409).json({
+        success: false,
+        msg: "Category with this name already exists",
+      });
+    }
+
     //save in db
     const categorydetails = await Category.create({
       name,
       description,
     });
-    console.log(categorydetails);
 
     return res.status(201).json({
       success: true,
       msg: "Category created successfully",
+      categorydetails,
     });
   } catch (error) {
     console.error(error);
@@ -61,20 +70,21 @@ exports.getAllCategory = async (req, res) => {
 };
 
 //show all categories
-exports.showAllCategories = async (req, res) => {
-	try {
-        console.log("INSIDE SHOW ALL CATEGORIES");
-		const allCategorys = await Category.find({});
-		res.status(200).json({
-			success: true,
-			data: allCategorys,
-		});
-	} catch (error) {
-		return res.status(500).json({
-			success: false,
-			message: error.message,
-		});
-	}
+exports.getAllCategories = async (req, res) => {
+  try {
+    const allCategorys = await Category.find({});
+    res.status(200).json({
+      success: true,
+      msg: "All Category fetch successfully",
+      data: allCategorys,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      msg: "Failed to fetch all Category",
+      error: error.message,
+    });
+  }
 };
 
 //category page details

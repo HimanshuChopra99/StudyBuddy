@@ -1,0 +1,15 @@
+html, body {
+  overflow-x: hidden;
+}
+
+.reactCode {
+  background-color: rgba(255, 255, 255, 0.1); /* transparent white */
+  border-radius: 8px;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px); /* For Safari */
+}
+
+.homepage_bg {
+  background-color: white;
+  background: url("../src/assets/Images/frame.png");
+}

@@ -48,28 +48,8 @@ exports.createCategory = async (req, res) => {
   }
 };
 
-//get all category
-exports.getAllCategory = async (req, res) => {
-  try {
-    const categorydetails = Category.findOne(
-      {},
-      { name: true, description: true }
-    );
-    return res.status(200).json({
-      success: true,
-      msg: "All Category fetch successfully",
-      data: categorydetails,
-    });
-  } catch (error) {
-    console.error(error);
-    return res.status(500).json({
-      success: false,
-      msg: "Failed to get category",
-    });
-  }
-};
 
-//show all categories
+//get all categories
 exports.getAllCategories = async (req, res) => {
   try {
     const allCategorys = await Category.find({});

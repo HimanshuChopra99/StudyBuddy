@@ -9,9 +9,15 @@ function Template({ title, description1, description2, image, formType }) {
   const { loading } = useSelector((state) => state.auth);
 
   return (
-    <div className="grid min-h-[calc(100vh-3.5rem)] place-items-center bg-richblack-900 px-4 mx-10">
+    <div className="grid min-h-[calc(100vh-3.5rem)] place-items-center bg-richblack-900  mx-10">
       {loading ? (
-        <div className="spinner"></div>
+        <div className="dots-container">
+          <div className="dot" />
+          <div className="dot" />
+          <div className="dot" />
+          <div className="dot" />
+          <div className="dot" />
+        </div>
       ) : (
         <div className="mx-auto flex w-full max-w-[1200px] flex-col items-center gap-12 py-10 md:flex-row-reverse md:items-start md:justify-center">
           {/* Right Side - Image */}

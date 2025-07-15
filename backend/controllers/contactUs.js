@@ -1,5 +1,6 @@
 const contactSchema = require("../validation/contactUs");
-const { contactUsEmail } = require("../mail/templates/contactFormRes")
+const { contactUsEmail } = require("../mail/templates/contactFormRes");
+const mailSender = require("../utils/mailSender");
 require("dotenv").config();
 
 exports.contactUs = async (req, res) => {
@@ -16,13 +17,13 @@ exports.contactUs = async (req, res) => {
       });
     }
 
-    const { firstName, lastName, email, phoneNo, message } = parsedData.data;
+    const { firstName, lastName, email, phoneNumber, message } = parsedData.data;
 
     // Save to DB
     const emailRes = await mailSender(
       email,
       "Your Data send successfully",
-      contactUsEmail(email, firstName, lastName, message, phoneNo, countrycode)
+      contactUsEmail(email, firstName, lastName, message, phoneNumber)
     );
     console.log("Email Res ", emailRes);
     return res.json({

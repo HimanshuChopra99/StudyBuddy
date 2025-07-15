@@ -1,11 +1,9 @@
 import { toast } from "react-hot-toast";
-
 import { setLoading, setToken } from "../../redux/slices/authSlice";
 import { resetCart } from "../../redux/slices/cartSlice";
 import { setUser } from "../../redux/slices/profileSlice";
 import { apiConnector } from "../apiconnector";
 import { endpoints } from "../apis";
-import { useNavigate } from "react-router-dom";
 
 const {
   SENDOTP_API,
@@ -14,7 +12,6 @@ const {
   RESETPASSTOKEN_API,
   RESETPASSWORD_API,
 } = endpoints;
-
 
 export function sendOtp(email, navigate) {
   return async (dispatch) => {
@@ -71,14 +68,14 @@ export function signUp(
       console.log("SIGNUP API RESPONSE............", response);
 
       if (!response.data.success) {
-        throw new Error(response.data.message);
+        toast.error("You Enter Wrong OTP. Please try again.");
       }
+
       toast.success("Signup Successful");
       navigate("/login");
     } catch (error) {
       console.log("SIGNUP API ERROR............", error);
-      toast.error("Signup Failed");
-      navigate("/signup");
+      toast.error("You Enter Wrong OTP. Please try again.");
     }
     dispatch(setLoading(false));
     toast.dismiss(toastId);
@@ -173,7 +170,7 @@ export function resetPassword(password, confirmPassword, token, navigate) {
       }
 
       toast.success("Password has been reset successfully");
-      navigate("/login")
+      navigate("/login");
     } catch (error) {
       console.log("RESET PASSWORD TOKEN Error", error);
       toast.error("Unable to reset password");

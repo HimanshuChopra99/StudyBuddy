@@ -9,6 +9,10 @@ import ForgotPassword from "./pages/ForgotPassword";
 import UpdatePassword from "./pages/UpdatePassword";
 import VerifyEmail from "./pages/VerifyEmail";
 import About from "./pages/About";
+import Contact from "./pages/Contact";
+import Dashboard from "./pages/Dashboard";
+import Profile from "./components/core/Dashboard/Profile";
+import Error from "./pages/Error";
 
 function App() {
   return (
@@ -48,12 +52,7 @@ function App() {
             </OpenRoute>
           }
         />
-        <Route
-          path="verify-email"
-          element={
-              <VerifyEmail />
-          }
-        />
+        <Route path="verify-email" element={<VerifyEmail />} />
         <Route
           path="about"
           element={
@@ -62,6 +61,14 @@ function App() {
             </OpenRoute>
           }
         />
+        <Route path="contact" element={<Contact />} />
+        <Route path="dashboard" element={<Dashboard />}>
+          <Route path="my-profile" element={<Profile />} />
+          <Route path="enrolled-courses" element={<div></div>} />
+          <Route path="cart" element={<div></div>} />
+          <Route path="settings" element={<div></div>} />
+        </Route>
+        <Route path="*" element={<Error />} />
       </Routes>
     </div>
   );

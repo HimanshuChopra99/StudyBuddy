@@ -110,7 +110,7 @@ function ContactUsForm() {
         </label>
 
         <div className="flex gap-5">
-          <div className="flex w-[130px] flex-col gap-2">
+          <div className="flex w-[90px] flex-col gap-2">
             <select
               type="text"
               name="phoneNumber"

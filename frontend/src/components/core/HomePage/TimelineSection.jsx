@@ -38,7 +38,7 @@ const TimelineSection = () => {
             return (
               <div className="flex flex-row gap-6" key={index}>
                 <div className="w-[50px] h-[50px] bg-white flex items-center">
-                  <img src={element.Logo} />
+                  <img src={element.Logo} loading='lazy' />
                 </div>
 
                 <div>
@@ -54,6 +54,7 @@ const TimelineSection = () => {
         <div className="relative shadow-blue-200 z-1">
           <div className="absolute h-60 w-60 -left-5 top-30 -z-1 opacity-40 rounded-full blur-2xl bg-blue-300"></div>
           <img
+            loading="lazy"
             src={timelineImage}
             alt="timelineImage"
             className="shadow-white object-cover h-fit rounded-2xl"

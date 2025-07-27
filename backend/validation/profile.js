@@ -5,6 +5,8 @@ const profileSchema = z.object({
   dateOfBirth: z.string().optional(),
   about: z.string().optional(),
   contactNumber: z.string().min(10).max(10).optional(),
+  firstName: z.string().optional(),
+  lastName: z.string().optional()
 });
 
 module.exports = {

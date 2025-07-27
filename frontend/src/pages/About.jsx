@@ -8,7 +8,7 @@ import FoundingStory from "../assets/Images/FoundingStory.png";
 import Stats from "../components/core/About/Stats";
 import LearningGrid from "../components/core/About/LearningGrid";
 import ContactFormSection from "../components/core/About/ContactFormSection";
-import Footer from "../components/common/Footer"
+import Footer from "../components/common/Footer";
 
 const About = () => {
   return (
@@ -27,9 +27,9 @@ const About = () => {
           </header>
           <div className="sm:h-[70px] lg:h-[150px]"></div>
           <div className="absolute bottom-0 left-[50%] grid w-10/12 translate-x-[-50%] translate-y-[30%] grid-cols-3 gap-3">
-            <img src={BannerImage1} alt="" />
-            <img src={BannerImage2} alt="" />
-            <img src={BannerImage3} alt="" />
+            <img src={BannerImage1} alt="" loading="lazy" />
+            <img src={BannerImage2} alt="" loading="lazy" />
+            <img src={BannerImage3} alt="" loading="lazy" />
           </div>
         </div>
       </section>
@@ -68,7 +68,7 @@ const About = () => {
 
             <div className="relative z-0">
               <div className="absolute h-40 w-40 md:h-50 md:w-60 bg-red-500  rounded-full blur-3xl opacity-70 top-0 -z-1"></div>
-              <img src={FoundingStory} alt="" />
+              <img src={FoundingStory} alt="" loading="lazy" />
             </div>
           </div>
           <div className="flex flex-col items-center lg:gap-10 lg:flex-row justify-between mb-20">

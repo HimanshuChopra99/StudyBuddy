@@ -1,6 +1,9 @@
 const Category = require("../models/Category");
 const { categorySchema } = require("../validation/category");
 require("dotenv").config();
+function getRandomInt(max) {
+  return Math.floor(Math.random() * max);
+}
 
 //craete category
 exports.createCategory = async (req, res) => {
@@ -48,7 +51,6 @@ exports.createCategory = async (req, res) => {
   }
 };
 
-
 //get all categories
 exports.getAllCategories = async (req, res) => {
   try {
@@ -91,7 +93,6 @@ exports.categoryPageDetails = async (req, res) => {
     }
     // Handle the case when there are  no courses
     if (selectedCategory.courses.length === 0) {
-      console.log("No courses found for the selected category.");
       return res.status(404).json({
         success: false,
         message: "No courses found for the selected category.",

@@ -11,7 +11,8 @@ const InstructorSection = () => {
         <div className='w-[50%]'>
             <img
                 src={Instructor}
-                alt=""
+                alt="instructor image"
+                loading='lazy'
                 className='shadow-white shadow-[-1.3rem_-1rem_0_0]'
             />
         </div>

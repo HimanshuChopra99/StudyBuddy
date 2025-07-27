@@ -84,8 +84,9 @@ export function signUp(
 
 export function login(email, password, navigate) {
   return async (dispatch) => {
-    const toastId = toast.loading("Loading...");
     dispatch(setLoading(true));
+    const toastId = toast.loading("Loading...");
+
     try {
       const response = await apiConnector("POST", LOGIN_API, {
         email,

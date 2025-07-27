@@ -4,7 +4,9 @@ require("dotenv").config();
 //auth
 exports.auth = async (req, res, next) => {
   try {
-    const token = req.cookies.token || req.header("Authorization")?.replace("Bearer", "");
+    const token =
+      req.cookies.token ||
+      req.header("Authorization")?.replace("Bearer ", "");
 
     if (!token) {
       return res.status(401).json({
@@ -12,9 +14,10 @@ exports.auth = async (req, res, next) => {
         msg: "No token found",
       });
     }
-
+    
     //verify token
-    const decode = jwt.verify(token, process.env.JWT_SECRET);
+    const decode =   jwt.verify(token, process.env.JWT_SECRET);
+    console.log(decode);
     if (decode) {
       req.user = decode;
       next();
@@ -24,7 +27,6 @@ exports.auth = async (req, res, next) => {
         msg: "Error in verifying jwt token",
       });
     }
-
   } catch (error) {
     console.error(error);
     return res.status(401).json({
@@ -34,11 +36,11 @@ exports.auth = async (req, res, next) => {
   }
 };
 
-//isStudent 
+//isStudent
 exports.isStudent = async (req, res, next) => {
   try {
     const accountType = req.user.accountType;
-    if(accountType !== "Student") {
+    if (accountType !== "Student") {
       return res.status(403).json({
         success: false,
         message: "Access denied: Student role required",
@@ -50,16 +52,16 @@ exports.isStudent = async (req, res, next) => {
     console.error(error);
     return res.status(500).json({
       success: false,
-      msg: "User role can't be verified, please try again"
+      msg: "User role can't be verified, please try again",
     });
   }
-}
+};
 
 //isInstructor
 exports.isInstructor = async (req, res, next) => {
   try {
     const accountType = req.user.accountType;
-    if(accountType !== "Instructor") {
+    if (accountType !== "Instructor") {
       return res.status(403).json({
         success: false,
         message: "Access denied: Instructor role required",
@@ -71,16 +73,16 @@ exports.isInstructor = async (req, res, next) => {
     console.error(error);
     return res.status(500).json({
       success: false,
-      msg: "User role can't be verified, please try again"
+      msg: "User role can't be verified, please try again",
     });
   }
-}
+};
 
 //isAdmin
 exports.isAdmin = async (req, res, next) => {
   try {
     const accountType = req.user.accountType;
-    if(accountType !== "Admin") {
+    if (accountType !== "Admin") {
       return res.status(403).json({
         success: false,
         message: "Access denied: Admin role required",
@@ -92,7 +94,7 @@ exports.isAdmin = async (req, res, next) => {
     console.error(error);
     return res.status(500).json({
       success: false,
-      msg: "User role can't be verified, please try again"
+      msg: "User role can't be verified, please try again",
     });
   }
-}
+};

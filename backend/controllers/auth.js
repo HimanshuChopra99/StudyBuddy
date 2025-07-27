@@ -162,7 +162,7 @@ exports.login = async (req, res) => {
     const { email, password } = parsedBody.data;
 
     //user exists
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ email }).populate("additionalDetails");
     if (!user) {
       return res.status(400).json({
         success: false,
@@ -188,7 +188,7 @@ exports.login = async (req, res) => {
 
     //genearet token
     const token = jwt.sign(payload, process.env.JWT_SECRET, {
-      expiresIn: "2h",
+      expiresIn: "7d",
     });
 
     user.password = undefined;
@@ -196,7 +196,7 @@ exports.login = async (req, res) => {
     //save token in cookie
     res.cookie("token", token, {
       httpOnly: true,
-      expires: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000),
+      maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
     res.status(200).json({

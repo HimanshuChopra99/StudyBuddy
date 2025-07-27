@@ -3,6 +3,8 @@ const Profile = require("../models/Profile");
 const User = require("../models/User");
 const { uploadImageToCloudinary } = require("../utils/imageUploader");
 const { profileSchema } = require("../validation/profile");
+const { convertSecondsToDuration } = require("../utils/secToDuration")
+const CourseProgress = require("../models/CourseProgress")
 require("dotenv").config();
 
 //update profile
@@ -26,6 +28,8 @@ exports.updateProfile = async (req, res) => {
       dateOfBirth,
       about,
       contactNumber,
+      firstName,
+      lastName
     } = parsedBody.data;
 
 
@@ -39,13 +43,20 @@ exports.updateProfile = async (req, res) => {
     if(dateOfBirth) profileDetails.dateOfBirth = dateOfBirth;
     if(about) profileDetails.about = about;
     if(contactNumber) profileDetails.contactNumber = contactNumber;
+    if(firstName) userDetails.firstName = firstName
+    if(lastName) userDetails.lastName = lastName
     await profileDetails.save();
+    await userDetails.save()
+
+    const updatedUserDetails = await User.findById(userId)
+      .populate("additionalDetails")
+      .exec()
 
     //response
     return res.status(200).json({
       success: true,
       msg: "Profile updated successfully",
-      data: profileDetails,
+      updatedUserDetails: updatedUserDetails,
     });
   } catch (error) {
     console.log(error.message);
@@ -217,7 +228,7 @@ exports.instructorDashboard = async (req, res) => {
     const courseDetails = await Course.find({ instructor: req.user.id })
 
     const courseData = courseDetails.map((course) => {
-      const totalStudentsEnrolled = course.studentsEnroled.length
+      const totalStudentsEnrolled = course.studentsEnrolled.length
       const totalAmountGenerated = totalStudentsEnrolled * course.price
 
       // Create a new object with the additional fields

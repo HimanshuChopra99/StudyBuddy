@@ -1,7 +1,7 @@
 import "./App.css";
 import { Route, Routes, useNavigate } from "react-router-dom";
 import Home from "./pages/Home";
-import Navbar from "./components/common/navbar";
+import Navbar from "./components/common/Navbar";
 import OpenRoute from "./components/core/Auth/OpenRoute";
 import Signup from "./pages/Signup";
 import Login from "./pages/Login";
@@ -26,6 +26,9 @@ import EditCourse from "./components/core/Dashboard/Edit Course";
 import Catalog from "./pages/Catalog";
 import { jwtDecode } from "jwt-decode";
 import { useEffect } from "react";
+import CourseDetails from "./pages/CourseDetails";
+import ViewCourse from "./pages/ViewCourse";
+import VideoDetails from "./components/core/ViewCourse/VideoDetails";
 
 function App() {
   const { user } = useSelector((state) => state.profile);
@@ -62,6 +65,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="catalog/:catalogName" element={<Catalog />} />
+        <Route path="courses/:courseId" element={<CourseDetails />} />
 
         <Route
           path="signup"
@@ -103,14 +107,7 @@ function App() {
             </OpenRoute>
           }
         />
-        <Route
-          path="about"
-          element={
-            <OpenRoute>
-              <About />
-            </OpenRoute>
-          }
-        />
+        <Route path="about" element={<About />} />
         <Route path="contact" element={<Contact />} />
 
         <Route
@@ -141,6 +138,23 @@ function App() {
               <Route
                 path="dashboard/edit-course/:courseId"
                 element={<EditCourse />}
+              />
+            </>
+          )}
+        </Route>
+
+        <Route
+          element={
+            <PrivateRoute>
+              <ViewCourse />
+            </PrivateRoute>
+          }
+        >
+          {user?.accountType === ACCOUNT_TYPE.STUDENT && (
+            <>
+              <Route
+                path="view-course/:courseId/section/:sectionId/sub-section/:subSectionId"
+                element={<VideoDetails />}
               />
             </>
           )}

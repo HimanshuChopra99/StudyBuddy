@@ -8,6 +8,7 @@ exports.createRating = async (req, res) => {
     const userId = req.user.id;
 
     const { rating, review, courseId } = req.body;
+    console.log(rating, review, courseId)
 
     //get course details
     const courseDetails = await Course.findOne({
@@ -28,10 +29,11 @@ exports.createRating = async (req, res) => {
       course: courseId,
     });
 
-    if (!alreadyReviewed) {
+    console.log(alreadyReviewed)
+    if (alreadyReviewed) {
       return res.status(400).json({
         success: false,
-        msg: "student already reviewed in this course",
+        msg: "Student already reviewed in this course",
       });
     }
 
@@ -48,7 +50,7 @@ exports.createRating = async (req, res) => {
       courseId,
       {
         $push: {
-          RatingAndReview: ratingReview,
+          ratingAndReviews: ratingReview,
         },
       },
       { new: true }

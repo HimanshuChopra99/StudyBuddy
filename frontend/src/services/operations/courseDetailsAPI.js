@@ -47,7 +47,7 @@ export const fetchCourseDetails = async (courseId) => {
   //   dispatch(setLoading(true));
   let result = null;
   try {
-    const response = await apiConnector("POST", COURSE_DETAILS_API, {
+    const response = await apiConnector("GET", COURSE_DETAILS_API,null, null, {
       courseId,
     });
     console.log("COURSE_DETAILS_API API RESPONSE............", response);
@@ -384,7 +384,7 @@ export const createRating = async (data, token) => {
   } catch (error) {
     success = false;
     console.log("CREATE RATING API ERROR............", error);
-    toast.error(error.message);
+    toast.error(error?.response?.data?.msg || "Someting went wrong");
   }
   toast.dismiss(toastId);
   return success;

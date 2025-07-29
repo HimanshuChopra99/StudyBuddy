@@ -104,9 +104,13 @@ function Navbar() {
         {/* login/signup */}
         <div className="flex gap-x-4 items-center">
           {user && user?.accountType !== ACCOUNT_TYPE.INSTRUCTOR && (
-            <Link to={"/dashboard/cart"} className="relative">
+            <Link to={"/dashboard/cart"} className="relative text-lg flex items-center">
               <FiShoppingCart className="text-white" />
-              {totalItems > 0 && <span>{totalItems}</span>}
+              {totalItems > 0 && (
+                <span className="text-yellow-50 font-bold flex justify-center items-center absolute rounded-full -top-2 -right-2 text-[0.6rem] h-4 w-4 bg-richblack-500">
+                  {totalItems}
+                </span>
+              )}
             </Link>
           )}
 

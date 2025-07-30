@@ -169,11 +169,8 @@ function Home() {
         {/* Review Slider here */}
       </div>
       <div className=" mb-16 mt-3">
-        <h2 className="text-center text-2xl md:text-4xl font-semibold mt-8 text-richblack-5 mb-5">
-          Reviews from other learners
-        </h2>
         {/* <RatingSlider /> */}
-        <h1 className="text-center text-4xl font-semibold mt-8">
+        <h1 className="text-center text-4xl font-semibold mt-8 text-white">
           Reviews from other learners
         </h1>
         <ReviewSlider />

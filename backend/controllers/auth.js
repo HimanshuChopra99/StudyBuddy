@@ -43,7 +43,7 @@ exports.sendotp = async (req, res) => {
 
     const otpPayload = { email, otp };
 
-    const otpBody = await OTP.create(otpPayload); //store otp in db
+    await OTP.create(otpPayload); //store otp in db
 
     //response sucessful
     res.status(200).json({
@@ -66,24 +66,16 @@ exports.signup = async (req, res) => {
     const body = req.body;
     const parsedBody = signUpSchema.safeParse(body);
 
-
     if (!parsedBody.success) {
       return res.status(411).json({
         success: false,
         msg: "invalid data",
-        error: parsedBody.error
+        error: parsedBody.error,
       });
     }
 
-    const {
-      firstName,
-      lastName,
-      email,
-      password,
-      accountType,
-      otp,
-    } = parsedBody.data;
-
+    const { firstName, lastName, email, password, accountType, otp } =
+      parsedBody.data;
 
     //user exists
     const userExist = await User.findOne({ email });
@@ -99,19 +91,19 @@ exports.signup = async (req, res) => {
       .sort({ createdAt: -1 })
       .limit(1);
 
-      console.log(recentOtp.otp)
+    console.log(recentOtp.otp);
     if (recentOtp.length === 0) {
       return res.status(400).json({
         success: false,
         msg: "OTP is not invalid",
       });
-    }  else if (otp !== recentOtp[0].otp) {
-			// Invalid OTP
-			return res.status(400).json({
-				success: false,
-				message: "The OTP is not valid",
-			});
-		}
+    } else if (otp !== recentOtp[0].otp) {
+      // Invalid OTP
+      return res.status(400).json({
+        success: false,
+        message: "The OTP is not valid",
+      });
+    }
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -205,8 +197,7 @@ exports.login = async (req, res) => {
       user,
       token,
     });
-  } 
-  catch (error) {
+  } catch (error) {
     console.error(error);
     res.status(500).json({
       success: false,
@@ -217,22 +208,22 @@ exports.login = async (req, res) => {
 
 //change password
 exports.changePassword = async (req, res) => {
-  try{
+  try {
     const userId = req.user.id;
 
     const { oldPassword, newPassword } = req.body;
-    
+
     const user = await User.findById(userId);
 
-    if(!user) {
+    if (!user) {
       return res.status(404).json({ success: false, msg: "User not found" });
     }
 
     const isMatch = await bcrypt.compare(oldPassword, user.password);
     if (!isMatch) {
-      return res.status(401).json({ 
-        success: false, 
-        msg: "Incorrect old password"
+      return res.status(401).json({
+        success: false,
+        msg: "Incorrect old password",
       });
     }
 
@@ -242,14 +233,13 @@ exports.changePassword = async (req, res) => {
 
     res.status(200).json({
       success: true,
-      msg: "Password changed successfully"
+      msg: "Password changed successfully",
     });
-  }
-  catch(error) {
+  } catch (error) {
     console.error(error);
     res.status(500).json({
       success: false,
       msg: "Failed to change password",
     });
   }
-}
+};

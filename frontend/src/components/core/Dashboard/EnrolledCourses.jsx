@@ -89,7 +89,7 @@ export default function EnrolledCourses() {
             ]}
           />
           <a
-            href="/courses"
+            href="/catalog/android"
             className="mt-7 px-7 py-2 bg-yellow-100 text-richblack-900 font-bold rounded-full shadow hover:bg-[#fcb100] transition duration-200"
           >
             Browse Courses

@@ -9,6 +9,7 @@ import Stats from "../components/core/About/Stats";
 import LearningGrid from "../components/core/About/LearningGrid";
 import ContactFormSection from "../components/core/About/ContactFormSection";
 import Footer from "../components/common/Footer";
+import ReviewSlider from "../components/common/ReviewSlider";
 
 const About = () => {
   return (
@@ -110,6 +111,14 @@ const About = () => {
           <ContactFormSection />
         </section>
       </section>
+
+      {/* Review Slider */}
+      <div className=" mb-16 mt-3">
+        <h1 className="text-center text-4xl font-semibold mt-8 text-white">
+          Reviews from other learners
+        </h1>
+        <ReviewSlider />
+      </div>
       <Footer />
     </div>
   );

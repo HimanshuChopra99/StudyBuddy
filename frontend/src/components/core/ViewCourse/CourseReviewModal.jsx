@@ -1,34 +1,35 @@
-import { useEffect } from "react"
-import { useForm } from "react-hook-form"
-import { RxCross2 } from "react-icons/rx"
-import ReactStars from "react-rating-stars-component"
-import { useSelector } from "react-redux"
-
-import { createRating } from "../../../services/operations/courseDetailsAPI"
-import IconBtn from "../../common/IconBtn"
+import { useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { RxCross2 } from "react-icons/rx";
+// import ReactStars from "react-rating-stars-component";
+import { useSelector } from "react-redux";
+import { createRating } from "../../../services/operations/courseDetailsAPI";
+import IconBtn from "../../common/IconBtn";
+import Rating from "react-rating";
+import { FaStar, FaRegStar } from "react-icons/fa";
 
 export default function CourseReviewModal({ setReviewModal }) {
-  const { user } = useSelector((state) => state.profile)
-  const { token } = useSelector((state) => state.auth)
-  const { courseEntireData } = useSelector((state) => state.viewCourse)
+  const { user } = useSelector((state) => state.profile);
+  const { token } = useSelector((state) => state.auth);
+  const { courseEntireData } = useSelector((state) => state.viewCourse);
 
   const {
     register,
     handleSubmit,
     setValue,
     formState: { errors },
-  } = useForm()
+  } = useForm();
 
   useEffect(() => {
-    setValue("courseExperience", "")
-    setValue("courseRating", 0)
+    setValue("courseExperience", "");
+    setValue("courseRating", 0);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, []);
 
   const ratingChanged = (newRating) => {
     // console.log(newRating)
-    setValue("courseRating", newRating)
-  }
+    setValue("courseRating", newRating);
+  };
 
   const onSubmit = async (data) => {
     await createRating(
@@ -38,12 +39,12 @@ export default function CourseReviewModal({ setReviewModal }) {
         review: data.courseExperience,
       },
       token
-    )
-    setReviewModal(false)
-  }
+    );
+    setReviewModal(false);
+  };
 
   return (
-    <div className="fixed inset-0 z-[1000] !mt-0 grid h-screen w-screen place-items-center overflow-auto bg-white bg-opacity-10 backdrop-blur-sm">
+    <div className="fixed inset-0 z-[1000] !mt-0 grid h-screen w-screen place-items-center overflow-auto  bg-opacity-10 backdrop-blur-sm  transition-all duration-300 ">
       <div className="my-10 w-11/12 max-w-[700px] rounded-lg border border-richblack-400 bg-richblack-800">
         {/* Modal Header */}
         <div className="flex items-center justify-between rounded-t-lg bg-richblack-700 p-5">
@@ -71,11 +72,12 @@ export default function CourseReviewModal({ setReviewModal }) {
             onSubmit={handleSubmit(onSubmit)}
             className="mt-6 flex flex-col items-center"
           >
-            <ReactStars
-              count={5}
+            <Rating
+              initialRating={0} 
               onChange={ratingChanged}
-              size={24}
-              activeColor="#ffd700"
+              emptySymbol={<FaRegStar size={30} color="#facc15 " />}
+              fullSymbol={<FaStar size={30} color="#facc15 " />}
+              fractions={2}
             />
             <div className="flex w-11/12 flex-col space-y-2">
               <label
@@ -109,5 +111,5 @@ export default function CourseReviewModal({ setReviewModal }) {
         </div>
       </div>
     </div>
-  )
+  );
 }

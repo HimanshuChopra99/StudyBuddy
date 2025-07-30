@@ -10,6 +10,7 @@ import TimelineSection from "../components/core/HomePage/TimelineSection";
 import LearningLanguageSection from "../components/core/HomePage/LearningLanguageSection";
 import InstructorSection from "../components/core/HomePage/InstructorSection";
 import ExploreMore from "../components/core/HomePage/ExploreMore";
+import ReviewSlider from "../components/common/ReviewSlider";
 
 function Home() {
   return (
@@ -162,8 +163,6 @@ function Home() {
         </div>
       </div>
 
-      
-
       <div className="w-11/12 mx-auto max-w-maxContent flex-col items-center justify-between gap-8 first-letter bg-richblack-900 text-white">
         <InstructorSection />
 
@@ -174,6 +173,10 @@ function Home() {
           Reviews from other learners
         </h2>
         {/* <RatingSlider /> */}
+        <h1 className="text-center text-4xl font-semibold mt-8">
+          Reviews from other learners
+        </h1>
+        <ReviewSlider />
       </div>
 
       {/* Footer */}

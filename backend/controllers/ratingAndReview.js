@@ -119,7 +119,7 @@ exports.getAllRating = async (req, res) => {
   try {
     //get all ratings
     const allReviews = await RatingAndReview.find({})
-      .sort({ rating: "decs" })
+      .sort({ rating: "desc" })
       .populate({
         path: "user",
         select: "firstName lastName email image",
@@ -128,7 +128,7 @@ exports.getAllRating = async (req, res) => {
         path: "course",
         select: "courseName",
       })
-      .exce();
+      .exec();
 
     return res.status(200).json({
       success: true,

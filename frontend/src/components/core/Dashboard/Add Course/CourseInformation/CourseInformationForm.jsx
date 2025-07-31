@@ -156,7 +156,7 @@ export default function CourseInformationForm() {
   };
 
   return (
-    <div className="px-4 sm:px-6 md:px-8 max-w-[700px] mx-auto w-full">
+    <div className="px-4 sm:px-6 md:px-8 mx-w-[700px] w-full mx-auto">
       <form
         onSubmit={handleSubmit(onSubmit)}
         className="space-y-8 rounded-md border-[1px] border-richblack-700 bg-richblack-800 p-6"

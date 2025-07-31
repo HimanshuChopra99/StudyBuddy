@@ -62,7 +62,7 @@ export default function HamburgerDrawer({
 
         {/* Logo */}
         <Link to="/" onClick={() => setOpen(false)}>
-          <img src="/" alt="Study Buddy" className="mb-6 w-32" />
+          <h3 className="text-white text-xl font-semibold">Studdy Buddy</h3>
         </Link>
 
         {/* Main nav links */}

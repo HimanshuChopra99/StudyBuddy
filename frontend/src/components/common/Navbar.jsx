@@ -54,16 +54,12 @@ function Navbar() {
       <div className="flex w-10/12 lg:w-9/12 justify-between items-center">
         {/* LOGO */}
         <Link to={"/"}>
-          <img
-            src="/"
-            alt="Studdy Buddy"
-            className="text-white text-2xl font-semibold"
-          />
+          <h1 className="text-white text-2xl font-semibold">Studdy Buddy</h1>
         </Link>
 
         {/* Hamburger on mobile/tablet only */}
         <button
-          className="lg:hidden block text-3xl text-richblack-25"
+          className="lg:hidden block text-xl text-richblack-25"
           onClick={() => setDrawerOpen(true)}
         >
           <FiMenu />

@@ -1,6 +1,7 @@
 const { default: mongoose } = require("mongoose");
 const Course = require("../models/Course");
 const RatingAndReview = require("../models/RatingAndReview");
+const { modeerateReviewContent } = require("../models/moderateText");
 require("dotenv").config();
 
 exports.createRating = async (req, res) => {
@@ -8,7 +9,15 @@ exports.createRating = async (req, res) => {
     const userId = req.user.id;
 
     const { rating, review, courseId } = req.body;
-    console.log(rating, review, courseId)
+
+    // Moderate review using Gemini
+    const isReviewSafe = await modeerateReviewContent(review);
+    if (!isReviewSafe) {
+      return res.status(400).json({
+        success: false,
+        msg: "Review contains inappropriate or meaningless content. Please revise it.",
+      });
+    }
 
     //get course details
     const courseDetails = await Course.findOne({
@@ -29,7 +38,7 @@ exports.createRating = async (req, res) => {
       course: courseId,
     });
 
-    console.log(alreadyReviewed)
+    console.log(alreadyReviewed);
     if (alreadyReviewed) {
       return res.status(400).json({
         success: false,
@@ -61,7 +70,6 @@ exports.createRating = async (req, res) => {
       msg: "Rating and Review created successfully",
       data: ratingReview,
     });
-    
   } catch (error) {
     return res.status(500).json({
       success: false,

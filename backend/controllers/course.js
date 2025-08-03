@@ -27,8 +27,9 @@ exports.createCourse = async (req, res) => {
       instructions: _instructions,
     } = req.body;
     // Get thumbnail image from request files
-    const thumbnail = req.files.thumbnailImage;
 
+    const thumbnail = req.files?.thumbnailImage || req.body.thumbnailImage;
+    console.log(thumbnail);
     // Convert the tag and instructions from stringified Array to Array
     const tag = JSON.parse(_tag);
     const instructions = JSON.parse(_instructions);
@@ -75,12 +76,28 @@ exports.createCourse = async (req, res) => {
         message: "Category Details Not Found",
       });
     }
+
     // Upload the Thumbnail to Cloudinary
-    const thumbnailImage = await uploadImageToCloudinary(
-      thumbnail,
-      process.env.FOLDER_NAME
-    );
-    console.log(thumbnailImage);
+    let thumbnailImageUrl;
+    if (thumbnail && typeof thumbnail === "object" && thumbnail.data) {
+      console.log("image");
+      // It's a File, upload to Cloudinary
+      const response = await uploadImageToCloudinary(
+        thumbnail,
+        process.env.FOLDER_NAME
+      );
+      thumbnailImageUrl = response.secure_url;
+    } else if (typeof thumbnail === "string" && thumbnail.startsWith("http")) {
+      console.log("url");
+      // It's already a URL, use as is
+      thumbnailImageUrl = thumbnail;
+    } else {
+      return res.status(400).json({
+        success: false,
+        msg: "enter the valid image",
+      });
+    }
+
     // Create a new course with the given details
     const newCourse = await Course.create({
       courseName,
@@ -90,7 +107,7 @@ exports.createCourse = async (req, res) => {
       price,
       tag,
       category: categoryDetails._id,
-      thumbnail: thumbnailImage.secure_url,
+      thumbnail: thumbnailImageUrl,
       status: status,
       instructions,
     });

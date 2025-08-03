@@ -11,7 +11,19 @@ exports.uploadImageToCloudinary = async (file, folder, height, quality) => {
     }
     options.resource_type = "auto";
 
-    return await cloudinary.uploader.upload(file.tempFilePath, options);
+    let uploadSource = "";
+
+    if (typeof file === "string") {
+      // Case: file is a URL from AI thumbnail
+      uploadSource = file;
+    } else if (file?.tempFilePath) {
+      // Case: file uploaded by user
+      uploadSource = file.tempFilePath;
+    } else {
+      throw new Error("Unsupported file format: must be tempFilePath or string URL");
+    }
+
+    return await cloudinary.uploader.upload(uploadSource, options);
   } catch (error) {
     throw error
   }

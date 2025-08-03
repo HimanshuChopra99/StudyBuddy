@@ -50,6 +50,7 @@ const {
 
 // Importing Middlewares
 const { auth, isInstructor, isStudent, isAdmin } = require("../middlewares/auth")
+const { generateThumbnail } = require("../controllers/ai")
 
 
 //Course Routes
@@ -91,5 +92,8 @@ router.post("/getCategoryPageDetails", categoryPageDetails)
 router.post("/createRating", auth, isStudent, createRating)
 router.get("/getAverageRating", getAverageRating)
 router.get("/getReviews", getAllRating)
+
+//Ai features
+router.post("/thumbnail/generate-thumbnail", generateThumbnail)
 
 module.exports = router

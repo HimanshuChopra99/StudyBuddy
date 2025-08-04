@@ -3,7 +3,7 @@ import { toast } from "react-hot-toast";
 import { updateCompletedLectures } from "../../redux/slices/viewCourseSlice";
 // import { setLoading } from "../../slices/profileSlice";
 import { apiConnector } from "../apiconnector";
-import { courseEndpoints } from "../apis";
+import { AiEndpoints, courseEndpoints } from "../apis";
 import axios from "axios";
 
 const {
@@ -24,6 +24,8 @@ const {
   CREATE_RATING_API,
   LECTURE_COMPLETION_API,
 } = courseEndpoints;
+
+const { AI_THUMBNAIL_API } = AiEndpoints;
 
 export const getAllCourses = async () => {
   const toastId = toast.loading("Loading...");
@@ -47,7 +49,7 @@ export const fetchCourseDetails = async (courseId) => {
   //   dispatch(setLoading(true));
   let result = null;
   try {
-    const response = await apiConnector("GET", COURSE_DETAILS_API,null, null, {
+    const response = await apiConnector("GET", COURSE_DETAILS_API, null, null, {
       courseId,
     });
     console.log("COURSE_DETAILS_API API RESPONSE............", response);
@@ -80,6 +82,26 @@ export const fetchCourseCategories = async () => {
     toast.error(error.message);
   }
   return result;
+};
+
+//AI-Thumbnail genearte
+
+export const generateThumbnail = async (data, token) => {
+  let result = null;
+  const toastId = toast.loading("Generate Thumbnail...");
+  try {
+    const response = await apiConnector("POST", AI_THUMBNAIL_API, data);
+
+    console.log("Thumbnail response:", response);
+    toast.success("Thumbnail generated!");
+    toast.dismiss(toastId);
+    return response;
+  } catch (error) {
+    console.log("Thumbnail Generate Error:", error);
+    toast.dismiss(toastId);
+    toast.error(response.message);
+    throw error;
+  }
 };
 
 // add the course details
@@ -253,7 +275,7 @@ export const deleteSubSection = async (data, token) => {
     }
     toast.success("Lecture Deleted");
     result = response?.data?.data;
-    console.log(response)
+    console.log(response);
   } catch (error) {
     console.log("DELETE SUB-SECTION API ERROR............", error);
     toast.error(error.message);

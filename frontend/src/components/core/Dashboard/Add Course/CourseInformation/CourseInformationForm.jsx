@@ -16,6 +16,7 @@ import IconBtn from "../../../../common/IconBtn";
 import Upload from "../Upload";
 import ChipInput from "./ChipInput";
 import RequirementsField from "./RequirementField";
+import ThumbnailModal from "./ThumbnailModel";
 
 export default function CourseInformationForm() {
   const {
@@ -31,6 +32,14 @@ export default function CourseInformationForm() {
   const { course, editCourse } = useSelector((state) => state.course);
   const [loading, setLoading] = useState(false);
   const [courseCategories, setCourseCategories] = useState([]);
+
+  const [isThumbnailModalOpen, setIsThumbnailModalOpen] = useState(false);
+  const [thumbnail, setThumbnail] = useState("");
+
+  const handleThumbnailGenerated = (url) => {
+    setThumbnail(url);
+    setValue("courseImage", url);
+  };
 
   useEffect(() => {
     const getCategories = async () => {
@@ -61,6 +70,7 @@ export default function CourseInformationForm() {
 
   const isFormUpdated = () => {
     const currentValues = getValues();
+
     // console.log("changes after editing form values:", currentValues)
     if (
       currentValues.courseTitle !== course.courseName ||
@@ -145,7 +155,18 @@ export default function CourseInformationForm() {
     formData.append("category", data.courseCategory);
     formData.append("status", COURSE_STATUS.DRAFT);
     formData.append("instructions", JSON.stringify(data.courseRequirements));
-    formData.append("thumbnailImage", data.courseImage);
+    if (data.courseImage instanceof File) {
+      formData.append("thumbnailImage", data.courseImage);
+      console.log("file");
+    } else if (typeof data.courseImage === "string") {
+      formData.append("thumbnailImage", data.courseImage);
+      console.log("ai");
+      console.log(data.courseImage);
+    } else {
+      toast.error("Please upload or generate a valid thumbnail.");
+      return;
+    }
+
     setLoading(true);
     const result = await addCourseDetails(formData, token);
     if (result) {
@@ -266,7 +287,18 @@ export default function CourseInformationForm() {
           setValue={setValue}
           errors={errors}
           editData={editCourse ? course?.thumbnail : null}
+          thumbnail={thumbnail}
         />
+
+        {/* AI-genearte course thumbnail */}
+        <button
+          type="button"
+          onClick={() => setIsThumbnailModalOpen(true)}
+          className="bg-richblack-700 rounded-md text-white px-4 py-2 w-full"
+        >
+          Generate Thumbnail with AI
+        </button>
+
         {/* Benefits of the course */}
         <div className="flex flex-col space-y-2">
           <label className="text-sm text-richblack-5" htmlFor="courseBenefits">
@@ -312,6 +344,13 @@ export default function CourseInformationForm() {
           </IconBtn>
         </div>
       </form>
+      {isThumbnailModalOpen && (
+        <ThumbnailModal
+          isOpen={isThumbnailModalOpen}
+          onClose={() => setIsThumbnailModalOpen(false)}
+          onThumbnailGenerated={handleThumbnailGenerated}
+        />
+      )}
     </div>
   );
 }

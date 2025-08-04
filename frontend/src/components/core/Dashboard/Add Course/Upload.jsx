@@ -15,6 +15,7 @@ export default function Upload({
   video = false,
   viewData = null,
   editData = null,
+  thumbnail,
 }) {
   const { course } = useSelector((state) => state.course);
   const [selectedFile, setSelectedFile] = useState(null);
@@ -31,6 +32,13 @@ export default function Upload({
     }
   };
 
+  useEffect(() => {
+    if (thumbnail) {
+      setPreviewSource(thumbnail);
+      setValue(name, thumbnail);
+      setSelectedFile(null);
+    }
+  }, [thumbnail, name, setValue]);
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     accept: !video
       ? { "image/*": [".jpeg", ".jpg", ".png"] }
@@ -73,7 +81,7 @@ export default function Upload({
               <img
                 src={previewSource}
                 alt="Preview"
-                loading='lazy'
+                loading="lazy"
                 className="h-full w-full rounded-md object-cover"
               />
             ) : (

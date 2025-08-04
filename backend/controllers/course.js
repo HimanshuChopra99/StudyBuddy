@@ -78,25 +78,34 @@ exports.createCourse = async (req, res) => {
     }
 
     // Upload the Thumbnail to Cloudinary
-    let thumbnailImageUrl;
-    if (thumbnail && typeof thumbnail === "object" && thumbnail.data) {
-      console.log("image");
-      // It's a File, upload to Cloudinary
-      const response = await uploadImageToCloudinary(
-        thumbnail,
-        process.env.FOLDER_NAME
-      );
-      thumbnailImageUrl = response.secure_url;
-    } else if (typeof thumbnail === "string" && thumbnail.startsWith("http")) {
-      console.log("url");
-      // It's already a URL, use as is
-      thumbnailImageUrl = thumbnail;
-    } else {
-      return res.status(400).json({
-        success: false,
-        msg: "enter the valid image",
-      });
-    }
+    // let thumbnailImageUrl;
+    // if (thumbnail && typeof thumbnail === "object" && thumbnail.data) {
+    //   console.log("image");
+    //   // It's a File, upload to Cloudinary
+    //   const response = await uploadImageToCloudinary(
+    //     thumbnail,
+    //     process.env.FOLDER_NAME
+    //   );
+    //   thumbnailImageUrl = response.secure_url;
+    // } else if (typeof thumbnail === "string" && thumbnail.startsWith("http")) {
+    //   console.log("url");
+    //   // It's already a URL, use as is
+    //   const response = await uploadImageToCloudinary(
+    //     thumbnail,
+    //     process.env.FOLDER_NAME
+    //   );
+    //   thumbnailImageUrl = response.secure_url;
+    // } else {
+    //   return res.status(400).json({
+    //     success: false,
+    //     msg: "enter the valid image",
+    //   });
+    // }
+
+    const response = await uploadImageToCloudinary(
+      thumbnail,
+      process.env.FOLDER_NAME
+    );
 
     // Create a new course with the given details
     const newCourse = await Course.create({
@@ -107,7 +116,7 @@ exports.createCourse = async (req, res) => {
       price,
       tag,
       category: categoryDetails._id,
-      thumbnail: thumbnailImageUrl,
+      thumbnail: response.secure_url,
       status: status,
       instructions,
     });
@@ -134,7 +143,6 @@ exports.createCourse = async (req, res) => {
       },
       { new: true }
     );
-    console.log("HEREEEEEEEE", categoryDetails2);
     // Return the new course and a success message
     res.status(200).json({
       success: true,
@@ -456,9 +464,9 @@ exports.editCourse = async (req, res) => {
     }
 
     // === Handle thumbnail upload ===
-    if (req.files && req.files.thumbnailImage) {
+    if (req.files && req.files.thumbnailImage || req.body.thumbnailImage) {
       console.log("thumbnail update");
-      const thumbnail = req.files.thumbnailImage;
+      const thumbnail = req.files?.thumbnailImage || req.body.thumbnailImage;
       const thumbnailImage = await uploadImageToCloudinary(
         thumbnail,
         process.env.FOLDER_NAME

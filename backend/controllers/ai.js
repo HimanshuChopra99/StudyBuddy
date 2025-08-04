@@ -14,19 +14,19 @@ exports.generateThumbnail = async (req, res) => {
       .json({ success: false, message: "Prompt is required" });
   }
 
-  // const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+  const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
-  // geminiInput = `
-  //     You act as ab proferssional thumbnail designer. where user send his course name and according to teh course you have to design the thumbnail deisgn accoring to the course name. The course sixe is 16:9. and change teh design according to the user prompt change tahe design.
+  geminiInput = `
+      You act as ab proferssional thumbnail designer. where user send his course name and according to teh course you have to design the thumbnail deisgn accoring to the course name. The course sixe is 16:9. and change teh design according to the user prompt change tahe design.
 
-  //     Here is the user prompt: """${prompt}""".
+      Here is the user prompt: """${prompt}""".
 
-  //      Return only the enhanced AI-ready prompt — no extra commentary or formatting.
-  //     `;
-  // const geminiResult = await model.generateContent(geminiInput);
-  // console.log(geminiResult);
-  // const enhancedPrompt = geminiResult.response.text().trim();
-  // console.log("Enhanced Prompt:", enhancedPrompt);
+       Return only the enhanced AI-ready prompt — no extra commentary or formatting.
+      `;
+  const geminiResult = await model.generateContent(geminiInput);
+  console.log(geminiResult);
+  const enhancedPrompt = geminiResult.response.text().trim();
+  console.log("Enhanced Prompt:", enhancedPrompt);
 
   const width = 1280;
   const height = 720;
@@ -34,7 +34,7 @@ exports.generateThumbnail = async (req, res) => {
   const imgModel = "stable-diffusion-xl";
 
   const imageUrl = `https://pollinations.ai/p/${encodeURIComponent(
-    prompt
+    enhancedPrompt
   )}?width=${width}&height=${height}&seed=${seed}&model=${imgModel}`;
 
   console.log(imageUrl);

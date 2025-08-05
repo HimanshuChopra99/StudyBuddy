@@ -10,15 +10,6 @@ exports.createRating = async (req, res) => {
 
     const { rating, review, courseId } = req.body;
 
-    // Moderate review using Gemini
-    const isReviewSafe = await modeerateReviewContent(review);
-    if (!isReviewSafe) {
-      return res.status(400).json({
-        success: false,
-        msg: "Review contains inappropriate or meaningless content. Please revise it.",
-      });
-    }
-
     //get course details
     const courseDetails = await Course.findOne({
       _id: courseId,
@@ -38,11 +29,19 @@ exports.createRating = async (req, res) => {
       course: courseId,
     });
 
-    console.log(alreadyReviewed);
     if (alreadyReviewed) {
       return res.status(400).json({
         success: false,
         msg: "Student already reviewed in this course",
+      });
+    }
+
+    // Moderate review using Gemini
+    const isReviewSafe = await modeerateReviewContent(review);
+    if (!isReviewSafe) {
+      return res.status(400).json({
+        success: false,
+        msg: "Review contains inappropriate or meaningless content. Please revise it.",
       });
     }
 

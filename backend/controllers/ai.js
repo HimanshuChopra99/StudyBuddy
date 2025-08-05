@@ -40,16 +40,15 @@ exports.generateThumbnail = async (req, res) => {
   console.log(imageUrl);
 
   const cloudinaryRes = await uploadImageToCloudinary(
-      imageUrl,
-      process.env.FOLDER_NAME
-    );
+    imageUrl,
+    process.env.FOLDER_NAME
+  );
 
-    return res.status(200).json({
-      success: true,
-      thumbnailURL: imageUrl,
-    });
+  return res.status(200).json({
+    success: true,
+    thumbnailURL: imageUrl,
+  });
 };
-
 
 //gemini + image art
 // exports.generateThumbnail = async (req, res) => {
@@ -114,3 +113,59 @@ exports.generateThumbnail = async (req, res) => {
 //     });
 //   }
 // };
+
+//chat bot
+exports.chatBot = async (req, res) => {
+  try {
+    console.log(req.body);
+    const { message } = req.body;
+
+    if (!message) {
+      return res.status(400).json({
+        success: false,
+        msg: "question is required",
+      });
+    }
+
+    //
+    const intentPrompt = `
+      Classify the student's question into one of the following:
+        - tech
+        - study
+        - unrelated
+
+      Only respond with one word.
+
+      Question: ${message}
+    `;
+    
+
+    const model = genAI.getGenerativeModel({ model: "gemini-2.5-pro" }); //gemini-1.5-flash or gemini-2.5-pro
+    const filterData = await model.generateContent(intentPrompt);
+    const filterPrompt = filterData.response.text();
+
+    if (filterPrompt === "unrelated") {
+      return res.status(200).json({
+        success: true,
+        data: "Sorry, I can only help with tech or study-related questions.",
+      });
+    }
+
+    const prompt = `You are a helpful AI study assistant. Answer the following student question clearly and concisely, using beginner-friendly explanations. Only respond to technical or study-related topics.\n\nStudent: ${message}`;
+
+    const geminiResult = await model.generateContent(prompt);
+    const response = geminiResult.response.text();
+    console.log(response);
+
+    res.status(200).json({
+      success: true,
+      data: response,
+    });
+  } catch (error) {
+    console.log(error.message);
+    res.status(500).json({
+      success: false,
+      msg: "Failed to generate response",
+    });
+  }
+};

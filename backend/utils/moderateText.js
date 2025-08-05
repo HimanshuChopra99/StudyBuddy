@@ -6,18 +6,14 @@ const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
 async function modeerateReviewContent(text) {
-  const prompt = `You are a content moderation system. 
-Check if the following text is safe for publishing in a student course review.
+  const prompt = `You are a moderation bot. Check if the following text is inappropriate for a course review.
 
 Text: """${text}"""
 
-Reply only with: "safe" or "unsafe" based on whether the text contains:
-- Adult (18+) content
-- Abusive, offensive, or hateful language
-- Profanity or harmful speech
-- Gibberish, random characters, or meaningless spam
+Reply only with: "safe" or "unsafe" based on:
+- Abuse, hate, adult content, profanity, spam, or nonsense.
 
-Respond only with the word "safe" or "unsafe". Do not explain anything.`;
+Only reply with "safe" or "unsafe".`;
 
   try {
     const response = await model.generateContent(prompt);

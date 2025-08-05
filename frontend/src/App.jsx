@@ -29,6 +29,8 @@ import { useEffect } from "react";
 import CourseDetails from "./pages/CourseDetails";
 import ViewCourse from "./pages/ViewCourse";
 import VideoDetails from "./components/core/ViewCourse/VideoDetails";
+import ChatBot from "./components/common/ChatBot";
+import StudentChatWidget from "./pages/StudentChatWidget";
 
 function App() {
   const { user } = useSelector((state) => state.profile);
@@ -161,6 +163,9 @@ function App() {
         </Route>
         <Route path="*" element={<Error />} />
       </Routes>
+                {user?.accountType === ACCOUNT_TYPE.STUDENT && (
+                  <StudentChatWidget />
+                )}
     </div>
   );
 }

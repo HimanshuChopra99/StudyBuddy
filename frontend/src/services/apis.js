@@ -47,6 +47,7 @@ export const courseEndpoints = {
 //AI thumbnail
 export const AiEndpoints = {
   AI_THUMBNAIL_API: BASE_URL + "/course/thumbnail/generate-thumbnail",
+  CHAT_BOT: BASE_URL + "/course/chatbot/message"
 };
 
 // RATINGS AND REVIEWS

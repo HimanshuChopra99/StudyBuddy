@@ -1,6 +1,13 @@
 const { GoogleGenerativeAI, Modality } = require("@google/generative-ai");
 const { uploadImageToCloudinary } = require("../utils/imageUploader");
 const axios = require("axios");
+const {
+  extractAndTranscribeHindi,
+  transcribeAndSummarize,
+} = require("../utils/extractAndTranscribeHindi");
+const {
+  summarizeHindiTranscript,
+} = require("../utils/summmarizeHindiTranscript");
 require("dotenv").config();
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
@@ -138,7 +145,6 @@ exports.chatBot = async (req, res) => {
 
       Question: ${message}
     `;
-    
 
     const model = genAI.getGenerativeModel({ model: "gemini-2.5-pro" }); //gemini-1.5-flash or gemini-2.5-pro
     const filterData = await model.generateContent(intentPrompt);
@@ -151,11 +157,10 @@ exports.chatBot = async (req, res) => {
       });
     }
 
-    const prompt = `You are a helpful AI study assistant. Answer the following student question clearly and concisely, using beginner-friendly explanations. Only respond to technical or study-related topics.\n\nStudent: ${message}`;
+    const prompt = `You are a helpful AI study assistant. Answer the following student question clearly and concisely, using beginner-friendly explanations. Only respond to technical or study-related topics. Try to give answer in very short lenght \n\nStudent: ${message}`;
 
     const geminiResult = await model.generateContent(prompt);
     const response = geminiResult.response.text();
-    console.log(response);
 
     res.status(200).json({
       success: true,
@@ -166,6 +171,38 @@ exports.chatBot = async (req, res) => {
     res.status(500).json({
       success: false,
       msg: "Failed to generate response",
+    });
+  }
+};
+
+//video summarize
+exports.generateVideoSummary = async (req, res) => {
+  const { videoUrl } = req.body;
+
+  if (!videoUrl) {
+    return res.status(400).json({
+      success: false,
+      message: "Missing video URL or subsection ID",
+    });
+  }
+
+  try {
+    // step 1
+    const transcript = await transcribeAndSummarize(videoUrl);
+    const finalTranscript = transcript.transcript;
+
+    // // step 2
+    const summary = await summarizeHindiTranscript(finalTranscript);
+    res.status(200).json({
+      success: true,
+      data: summary,
+    });
+    
+  } catch (error) {
+    console.error("Summary error:", error.message);
+    return res.status(500).json({
+      success: false,
+      message: "Failed to generate video summary",
     });
   }
 };

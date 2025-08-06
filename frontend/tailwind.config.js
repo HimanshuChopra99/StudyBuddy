@@ -7,6 +7,21 @@ module.exports = {
       "edu-sa": ["Edu SA Beginner", "cursive"],
       mono: ["Roboto Mono", "monospace"],
     },
+    animation: {
+      "typewriter-loop":
+        "typewriter 4s steps(28) 1s infinite alternate, blink-caret 0.75s step-end infinite",
+    },
+    keyframes: {
+      typewriter: {
+        "0%": { width: "0" },
+        "50%": { width: "100%" },
+        "100%": { width: "0" },
+      },
+      "blink-caret": {
+        "0%, 100%": { borderColor: "transparent" },
+        "50%": { borderColor: "white" },
+      },
+    },
     colors: {
       white: "#fff",
       black: "#000",
@@ -129,5 +144,5 @@ module.exports = {
       maxContentTab: "650px",
     },
   },
-  plugins: [],
+  plugins: [require("@tailwindcss/typography")],
 };

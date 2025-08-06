@@ -5,7 +5,7 @@ import ChatBot from "../components/common/ChatBot";
 export default function StudentChatWidget() {
   const [isOpen, setIsOpen] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
-  const [position, setPosition] = useState({ x: 20, y: 20 }); // bottom and right
+  const [position, setPosition] = useState({ x: 20, y: 20 }); // Top and left
   const dragRef = useRef(null);
 
   // Load saved position
@@ -23,6 +23,12 @@ export default function StudentChatWidget() {
     chatBtn.dataset.startY = e.clientY;
     chatBtn.dataset.origX = position.x;
     chatBtn.dataset.origY = position.y;
+
+    // Prevent ghost image while dragging
+    const img = new Image();
+    img.src =
+      "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8/5+hHgAGgwJ/lKX+lwAAAABJRU5ErkJggg==";
+    e.dataTransfer.setDragImage(img, 0, 0);
   };
 
   const handleDrag = (e) => {
@@ -32,8 +38,8 @@ export default function StudentChatWidget() {
     const dx = e.clientX - chatBtn.dataset.startX;
     const dy = e.clientY - chatBtn.dataset.startY;
 
-    const newX = parseInt(chatBtn.dataset.origX) - dx;
-    const newY = parseInt(chatBtn.dataset.origY) - dy;
+    const newX = parseInt(chatBtn.dataset.origX) + dx;
+    const newY = parseInt(chatBtn.dataset.origY) + dy;
 
     setPosition({ x: newX, y: newY });
   };
@@ -65,8 +71,8 @@ export default function StudentChatWidget() {
           onClick={toggleChat}
           className="fixed z-50 bg-yellow-100 hover:bg-yellow-200 p-4 rounded-full shadow-md transition-colors"
           style={{
-            bottom: `${position.y}px`,
-            right: `${position.x}px`,
+            top: `${position.y}px`,
+            left: `${position.x}px`,
             cursor: "grab",
           }}
         >
@@ -77,7 +83,7 @@ export default function StudentChatWidget() {
       {/* Chat Overlay */}
       {isOpen && (
         <div className="fixed inset-0 z-40">
-          {/* Clickable backdrop */}
+          {/* Backdrop */}
           <div
             className="absolute inset-0 bg-transparent"
             onClick={toggleChat}
@@ -86,14 +92,14 @@ export default function StudentChatWidget() {
           {/* Chat Panel */}
           <div
             className={`absolute bottom-0 right-0 sm:bottom-20 sm:right-6 w-full sm:w-auto px-2 sm:px-0 flex justify-center sm:justify-end items-end 
-            transition-all duration-300 ease-in-out 
-            ${
-              isVisible
-                ? "opacity-100 translate-y-0"
-                : "opacity-0 translate-y-10"
-            }`}
+              transition-all duration-300 ease-in-out 
+              ${
+                isVisible
+                  ? "opacity-100 translate-y-0"
+                  : "opacity-0 translate-y-10"
+              }`}
           >
-            <ChatBot onClose={toggleChat}  />
+            <ChatBot onClose={toggleChat} />
           </div>
         </div>
       )}

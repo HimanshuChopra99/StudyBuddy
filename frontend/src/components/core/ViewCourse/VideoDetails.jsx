@@ -1,14 +1,24 @@
+// components/VideoDetails.jsx
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate, useParams } from "react-router-dom";
+import {
+  useNavigate,
+  useParams,
+  useLocation,
+  useOutletContext,
+} from "react-router-dom";
 
 import "video-react/dist/video-react.css";
-import { useLocation } from "react-router-dom";
 import { BigPlayButton, Player } from "video-react";
 
-import { markLectureAsComplete } from "../../../services/operations/courseDetailsAPI";
+import {
+  getLectureSummary,
+  markLectureAsComplete,
+} from "../../../services/operations/courseDetailsAPI";
 import { updateCompletedLectures } from "../../../redux/slices/viewCourseSlice";
 import IconBtn from "../../common/IconBtn";
+import DOMPurify from "dompurify";
+import TypingSummary from "../../common/TypingSummary";
 
 const VideoDetails = () => {
   const { courseId, sectionId, subSectionId } = useParams();
@@ -24,6 +34,10 @@ const VideoDetails = () => {
   const [previewSource, setPreviewSource] = useState("");
   const [videoEnded, setVideoEnded] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [summary, setSummary] = useState();
+
+  const { showToggleBtn, sidebarVisible, setSidebarVisible } =
+    useOutletContext();
 
   useEffect(() => {
     (async () => {
@@ -31,15 +45,12 @@ const VideoDetails = () => {
       if (!courseId && !sectionId && !subSectionId) {
         navigate(`/dashboard/enrolled-courses`);
       } else {
-        // console.log("courseSectionData", courseSectionData)
         const filteredData = courseSectionData.filter(
           (course) => course._id === sectionId
         );
-        // console.log("filteredData", filteredData)
         const filteredVideoData = filteredData?.[0]?.subSection.filter(
           (data) => data._id === subSectionId
         );
-        // console.log("filteredVideoData", filteredVideoData)
         setVideoData(filteredVideoData[0]);
         setPreviewSource(courseEntireData.thumbnail);
         setVideoEnded(false);
@@ -47,39 +58,25 @@ const VideoDetails = () => {
     })();
   }, [courseSectionData, courseEntireData, location.pathname]);
 
-  // check if the lecture is the first video of the course
   const isFirstVideo = () => {
     const currentSectionIndx = courseSectionData.findIndex(
       (data) => data._id === sectionId
     );
-
     const currentSubSectionIndx = courseSectionData[
       currentSectionIndx
     ].subSection.findIndex((data) => data._id === subSectionId);
-
-    if (currentSectionIndx === 0 && currentSubSectionIndx === 0) {
-      return true;
-    } else {
-      return false;
-    }
+    return currentSectionIndx === 0 && currentSubSectionIndx === 0;
   };
 
-  // go to the next video
   const goToNextVideo = () => {
-    // console.log(courseSectionData)
-
     const currentSectionIndx = courseSectionData.findIndex(
       (data) => data._id === sectionId
     );
-
     const noOfSubsections =
       courseSectionData[currentSectionIndx].subSection.length;
-
     const currentSubSectionIndx = courseSectionData[
       currentSectionIndx
     ].subSection.findIndex((data) => data._id === subSectionId);
-
-    // console.log("no of subsections", noOfSubsections)
 
     if (currentSubSectionIndx !== noOfSubsections - 1) {
       const nextSubSectionId =
@@ -99,37 +96,25 @@ const VideoDetails = () => {
     }
   };
 
-  // check if the lecture is the last video of the course
   const isLastVideo = () => {
     const currentSectionIndx = courseSectionData.findIndex(
       (data) => data._id === sectionId
     );
-
     const noOfSubsections =
       courseSectionData[currentSectionIndx].subSection.length;
-
     const currentSubSectionIndx = courseSectionData[
       currentSectionIndx
     ].subSection.findIndex((data) => data._id === subSectionId);
-
-    if (
+    return (
       currentSectionIndx === courseSectionData.length - 1 &&
       currentSubSectionIndx === noOfSubsections - 1
-    ) {
-      return true;
-    } else {
-      return false;
-    }
+    );
   };
 
-  // go to the previous video
   const goToPrevVideo = () => {
-    // console.log(courseSectionData)
-
     const currentSectionIndx = courseSectionData.findIndex(
       (data) => data._id === sectionId
     );
-
     const currentSubSectionIndx = courseSectionData[
       currentSectionIndx
     ].subSection.findIndex((data) => data._id === subSectionId);
@@ -156,6 +141,19 @@ const VideoDetails = () => {
     }
   };
 
+  const handelSummary = async () => {
+    const videoUrl = videoData?.videoUrl;
+    setLoading(true);
+    const res = await getLectureSummary(videoUrl);
+    const cleanHtml = DOMPurify.sanitize(
+      res.replace(/```html|```/g, "").trim()
+    );
+    setSummary(cleanHtml);
+    setLoading(false);
+  };
+
+  useEffect(() => {}, []);
+
   const handleLectureCompletion = async () => {
     setLoading(true);
     const res = await markLectureAsComplete(
@@ -169,82 +167,113 @@ const VideoDetails = () => {
   };
 
   return (
-    <div className="flex flex-col gap-5 text-white">
-      {!videoData ? (
-        <img
-          src={previewSource}
-          alt="Preview"
-          className="h-full w-full rounded-md object-cover"
-        />
-      ) : (
-        <Player
-          ref={playerRef}
-          aspectRatio="16:9"
-          // playsInline
-          onEnded={() => setVideoEnded(true)}
-          src={videoData?.videoUrl}
-        >
-          <BigPlayButton position="center" />
-          {/* Render When Video Ends */}
-          {videoEnded && (
-            <div
-              style={{
-                backgroundImage:
-                  "linear-gradient(to top, rgb(0, 0, 0), rgba(0,0,0,0.7), rgba(0,0,0,0.5), rgba(0,0,0,0.1)",
-              }}
-              className="full absolute inset-0 z-[100] grid h-full place-content-center font-inter"
-            >
-              {console.log(completedLectures)}
-              {!completedLectures.includes(subSectionId) && (
+    <div className="flex flex-col gap-4 text-white py-6">
+      {/* Video Player */}
+      <div className="relative w-full rounded-lg overflow-hidden shadow-lg border border-richblack-700">
+        {!videoData ? (
+          <img
+            src={previewSource}
+            alt="Preview"
+            className="w-full h-full object-cover rounded-md"
+          />
+        ) : (
+          <Player
+            ref={playerRef}
+            aspectRatio="16:9"
+            onEnded={() => setVideoEnded(true)}
+            src={videoData?.videoUrl}
+          >
+            <BigPlayButton position="center" />
+            {videoEnded && (
+              <div className="absolute inset-0 z-50 flex flex-col justify-center items-center bg-gradient-to-t from-black/90 via-black/60 to-transparent text-center px-6">
+                {!completedLectures.includes(subSectionId) && (
+                  <IconBtn
+                    disabled={loading}
+                    onclick={handleLectureCompletion}
+                    text={!loading ? "✅ Mark As Completed" : "Loading..."}
+                    customClasses="text-lg font-semibold mb-4 w-fit"
+                  />
+                )}
                 <IconBtn
                   disabled={loading}
-                  onclick={() => handleLectureCompletion()}
-                  text={!loading ? "Mark As Completed" : "Loading..."}
-                  customClasses="text-xl max-w-max px-4 mx-auto"
+                  onclick={() => {
+                    if (playerRef?.current) {
+                      playerRef.current.seek(0);
+                      setVideoEnded(false);
+                    }
+                  }}
+                  text="🔁 Rewatch"
+                  customClasses="text-lg mb-6"
                 />
-              )}
-              <IconBtn
-                disabled={loading}
-                onclick={() => {
-                  if (playerRef?.current) {
-                    // set the current time of the video to 0
-                    playerRef?.current?.seek(0);
-                    setVideoEnded(false);
-                  }
-                }}
-                text="Rewatch"
-                customClasses="text-xl max-w-max px-4 mx-auto mt-2"
-              />
-              <div className="mt-10 flex min-w-[250px] justify-center gap-x-4 text-xl">
-                {!isFirstVideo() && (
-                  <button
-                    disabled={loading}
-                    onClick={goToPrevVideo}
-                    className="blackButton"
-                  >
-                    Prev
-                  </button>
-                )}
-                {!isLastVideo() && (
-                  <button
-                    disabled={loading}
-                    onClick={goToNextVideo}
-                    className="blackButton"
-                  >
-                    Next
-                  </button>
-                )}
+                <div className="flex gap-4">
+                  {!isFirstVideo() && (
+                    <button
+                      onClick={goToPrevVideo}
+                      className="blackButton text-white text-base px-6 py-2 rounded-md"
+                    >
+                      ⬅️ Prev
+                    </button>
+                  )}
+                  {!isLastVideo() && (
+                    <button
+                      onClick={goToNextVideo}
+                      className="blackButton text-white text-base px-6 py-2 rounded-md"
+                    >
+                      Next ➡️
+                    </button>
+                  )}
+                </div>
               </div>
-            </div>
-          )}
-        </Player>
-      )}
+            )}
+          </Player>
+        )}
+      </div>
 
-      <h1 className="mt-4 text-3xl font-semibold">{videoData?.title}</h1>
-      <p className="pt-2 pb-6">{videoData?.description}</p>
+      {/* Lecture Info */}
+      <div className="mt-4 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 md:gap-8">
+        <div className="flex-1">
+          <h1 className="text-2xl md:text-3xl font-bold text-richblack-5 mb-2">
+            {videoData?.title}
+          </h1>
+          <p className="text-richblack-200 text-base leading-relaxed">
+            {videoData?.description}
+          </p>
+        </div>
+        <div className="flex flex-col items-start gap-3 md:items-end">
+          {showToggleBtn && (
+            <button
+              className="md:hidden w-full rounded bg-yellow-100 px-4 py-2 text-sm font-semibold text-black shadow hover:bg-yellow-200 hover:scale-105 transition-all duration-200"
+              onClick={() => setSidebarVisible((prev) => !prev)}
+            >
+              {sidebarVisible ? "Hide Sidebar" : "Show Sidebar"}
+            </button>
+          )}
+          <button
+            onClick={handelSummary}
+            className="px-5 py-2 rounded-md bg-yellow-100 text-black font-semibold shadow hover:bg-yellow-200 hover:scale-105 transition-all duration-200"
+          >
+            Get Video Summary with AI
+          </button>
+        </div>
+      </div>
+
+      {/* Summary Section */}
+      <div className="w-full bg-richblack-800 rounded-lg min-h-[100px]">
+        {loading ? (
+          <div className="text-richblack-50 text-lg px-6 py-6 font-mono whitespace-nowrap overflow-hidden w-full h-[100px] animate-typewriter-loop rounded-lg shimmer">
+            Generating summary for you...
+          </div>
+        ) : (
+          summary && (
+            <div
+              className="prose prose-invert max-w-none px-6 py-6 list-disc marker:text-white space-y-2"
+              dangerouslySetInnerHTML={{ __html: summary }}
+            />
+          )
+        )}
+      </div>
     </div>
   );
 };
 
 export default VideoDetails;
-// video

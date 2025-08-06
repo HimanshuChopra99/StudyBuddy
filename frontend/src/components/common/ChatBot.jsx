@@ -13,22 +13,14 @@ const ChatBot = ({ onClose }) => {
   const [isTyping, setIsTyping] = useState(false);
   const scrollRef = useRef();
   const { token } = useSelector((state) => state.auth);
+  const textareaRef = useRef();
 
   useEffect(() => {
-    scrollRef.current?.scrollIntoView({ behavior: "smooth" });
+    const timer = setTimeout(() => {
+      scrollRef.current?.scrollIntoView({ behavior: "smooth" });
+    }, 100); // Slight delay ensures message fully renders
+    return () => clearTimeout(timer);
   }, [messages, isTyping]);
-
-  const sendToAI = (text) => {
-    setIsTyping(true);
-    setTimeout(() => {
-      const aiReply = `You asked: "${text}". Here’s a helpful answer!`;
-      setMessages((msgs) => [
-        ...msgs,
-        { sender: "ai", text: aiReply, timestamp: new Date() },
-      ]);
-      setIsTyping(false);
-    }, 2000 + Math.random() * 1000);
-  };
 
   const handleSend = async () => {
     const message = input.trim();
@@ -75,6 +67,14 @@ const ChatBot = ({ onClose }) => {
     }
   };
 
+  //message text area
+  useEffect(() => {
+    if (textareaRef.current) {
+      textareaRef.current.style.height = "auto"; // reset first
+      textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`; // auto-grow
+    }
+  }, [input]);
+
   return (
     <div className="w-[90vw] sm:w-[400px] h-[90vh] sm:h-[600px] bg-gray-200 border border-gray-300 rounded-lg shadow-md flex flex-col relative ">
       {/* Header with close button */}
@@ -86,7 +86,7 @@ const ChatBot = ({ onClose }) => {
       </div>
 
       {/* Messages */}
-      <div className="flex-1 p-3 overflow-y-auto space-y-2">
+      <div className="flex-1 p-3 overflow-y-auto space-y-2 custom-scrollbar">
         {messages.map((m, i) => (
           <div
             key={i}
@@ -102,10 +102,11 @@ const ChatBot = ({ onClose }) => {
               }`}
             >
               <ReactMarkdown
-                children={m.text}
                 remarkPlugins={[remarkGfm]}
                 rehypePlugins={[rehypeHighlight]}
-              />
+              >
+                {m.text}
+              </ReactMarkdown>
               <div className="text-[10px] text-right text-gray-400 mt-1">
                 {m.timestamp.toLocaleTimeString([], {
                   hour: "2-digit",
@@ -129,18 +130,19 @@ const ChatBot = ({ onClose }) => {
       </div>
 
       {/* Input */}
-      <div className="flex p-3 border-t-1 border-gray-300 bg-white rounded-b-md ">
+      <div className="flex items-end p-3 border-t-1 max-h-40 border-gray-300 bg-white rounded-b-md ">
         <textarea
           rows={1}
+          ref={textareaRef}
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={handleKeyDown}
           placeholder="Type your message..."
-          className="flex-1 resize-none border border-gray-300 rounded-full px-4 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-green-500"
+          className="flex-1 min-h-10 max-h-32 overflow-y-auto resize-none border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-green-500 hide-scrollbar"
         />
         <button
           onClick={handleSend}
-          className="ml-3 bg-green-600 hover:bg-green-700 text-white text-sm px-4 py-2 rounded-full"
+          className="ml-3 bg-green-600 hover:bg-green-700 h-10 text-white text-sm px-4 py-2 rounded-full"
         >
           Send
         </button>

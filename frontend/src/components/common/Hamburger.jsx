@@ -20,6 +20,7 @@ export default function HamburgerDrawer({
   const drawerRef = useRef();
   const navigate = useNavigate();
   const [catalogOpen, setCatalogOpen] = useState(false);
+  const [dashboardOpen, setDashboardOpen] = useState(false);
 
   // Close drawer when clicking outside
   useEffect(() => {
@@ -132,21 +133,97 @@ export default function HamburgerDrawer({
         <hr className=" border-t border-richblack-700" />
 
         {/* Cart (only for students) */}
-        {user && user.accountType !== ACCOUNT_TYPE.INSTRUCTOR && (
-          <Link
-            to={"/dashboard/cart"}
-            className="relative ml-2 flex items-center gap-2 font-semibold text-richblack-100"
-            onClick={() => setOpen(false)}
+        {/* Dashboard Dropdown */}
+        <div className="ml-2">
+          <button
+            onClick={() => setDashboardOpen(!dashboardOpen)}
+            className="flex items-center gap-1 cursor-pointer font-semibold text-richblack-25 py-2 w-full"
           >
-            <FiShoppingCart />
-            Cart
-            {totalItems > 0 && (
-              <span className="ml-1 text-yellow-50 font-bold flex justify-center items-center rounded-full text-xs h-4 w-4 bg-richblack-500">
-                {totalItems}
-              </span>
+            Dashboard
+            <IoIosArrowDown
+              className={`text-xl transition-transform duration-300 ${
+                dashboardOpen ? "rotate-180" : "rotate-0"
+              }`}
+            />
+          </button>
+
+          {/* Smooth Dropdown Animation */}
+          <div
+            className={`transition-all duration-300 ease-in-out overflow-hidden flex flex-col pl-3 ${
+              dashboardOpen ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0"
+            }`}
+          >
+            {/* Common for all users */}
+            <Link
+              to="/dashboard/my-profile"
+              onClick={() => setOpen(false)}
+              className="py-1 px-2 rounded text-richblack-100 hover:text-richblack-900 hover:bg-richblack-50"
+            >
+              My Profile
+            </Link>
+
+            {/* Student specific */}
+            {user?.accountType === ACCOUNT_TYPE.STUDENT && (
+              <>
+                <Link
+                  to="/dashboard/enrolled-courses"
+                  onClick={() => setOpen(false)}
+                  className="py-1 px-2 rounded text-richblack-100 hover:text-richblack-900 hover:bg-richblack-50"
+                >
+                  Enrolled Courses
+                </Link>
+                <Link
+                  to="/dashboard/cart"
+                  onClick={() => setOpen(false)}
+                  className="py-1 px-2 rounded text-richblack-100 hover:text-richblack-900 hover:bg-richblack-50"
+                >
+                  Cart
+                </Link>
+                <Link
+                  to="/dashboard/settings"
+                  onClick={() => setOpen(false)}
+                  className="py-1 px-2 rounded text-richblack-100 hover:text-richblack-900 hover:bg-richblack-50"
+                >
+                  Setting
+                </Link>
+              </>
             )}
-          </Link>
-        )}
+
+            {/* Instructor specific */}
+            {user?.accountType === ACCOUNT_TYPE.INSTRUCTOR && (
+              <>
+                <Link
+                  to="/dashboard/my-courses"
+                  onClick={() => setOpen(false)}
+                  className="py-1 px-2 rounded text-richblack-100 hover:text-richblack-900 hover:bg-richblack-50"
+                >
+                  My Courses
+                </Link>
+                <Link
+                  to="/dashboard/add-course"
+                  onClick={() => setOpen(false)}
+                  className="py-1 px-2 rounded text-richblack-100 hover:text-richblack-900 hover:bg-richblack-50"
+                >
+                  Create Course
+                </Link>
+                <Link
+                  to="/dashboard/instructor"
+                  onClick={() => setOpen(false)}
+                  className="py-1 px-2 rounded text-richblack-100 hover:text-richblack-900 hover:bg-richblack-50"
+                >
+                  Dashboard
+                </Link>
+                <Link
+                  to="/dashboard/settings"
+                  onClick={() => setOpen(false)}
+                  className="py-1 px-2 rounded text-richblack-100 hover:text-richblack-900 hover:bg-richblack-50"
+                >
+                  Setting
+                </Link>
+              </>
+            )}
+          </div>
+        </div>
 
         {/* Auth Buttons */}
         {token === null ? (
@@ -167,20 +244,13 @@ export default function HamburgerDrawer({
             </Link>
           </div>
         ) : (
-          <div className="flex flex-col gap-1 pt-3">
-            <Link
-              to="/dashboard/my-profile"
-              className="flex items-center gap-2 py-2 px-2 rounded text-richblack-100 hover:bg-richblack-800"
-              onClick={() => setOpen(false)}
-            >
-              <VscDashboard /> Dashboard
-            </Link>
+          <div className="flex flex-col gap-1">
             <button
               onClick={() => {
                 setOpen(false);
                 dispatch(logout(navigate));
               }}
-              className="flex items-center gap-2 py-2 px-2 rounded text-richblack-100 hover:bg-richblack-800"
+              className="flex items-center gap-2 py-2 px-2 rounded text-richblack-100 hover:bg-red-800 duration-200 hover:text-richblack-50 hover:font-semibold"
             >
               <VscSignOut /> Logout
             </button>

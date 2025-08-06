@@ -8,7 +8,6 @@ import { IoIosArrowDown } from "react-icons/io";
 import { apiConnector } from "../../services/apiconnector";
 import { categories } from "../../services/apis";
 import ProfileDropdown from "../core/Auth/ProfileDropDown";
-import Hamburger from "./Hamburger";
 import HamburgerDrawer from "./Hamburger";
 
 function Navbar() {
@@ -58,12 +57,14 @@ function Navbar() {
         </Link>
 
         {/* Hamburger on mobile/tablet only */}
-        <button
-          className="lg:hidden block text-xl text-richblack-25"
-          onClick={() => setDrawerOpen(true)}
-        >
-          <FiMenu />
-        </button>
+        {!drawerOpen && (
+          <button
+            className="lg:hidden block text-xl text-richblack-25"
+            onClick={() => setDrawerOpen(true)}
+          >
+            <FiMenu />
+          </button>
+        )}
 
         {/* NAV LINKS, Cart, Login/SignUp, ProfileDropdown for desktop/laptop */}
         <nav className="hidden lg:block">

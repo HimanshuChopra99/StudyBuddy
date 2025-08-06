@@ -25,7 +25,7 @@ const {
   LECTURE_COMPLETION_API,
 } = courseEndpoints;
 
-const { AI_THUMBNAIL_API } = AiEndpoints;
+const { AI_THUMBNAIL_API, LECTURE_SUMMARY } = AiEndpoints;
 
 export const getAllCourses = async () => {
   const toastId = toast.loading("Loading...");
@@ -410,4 +410,17 @@ export const createRating = async (data, token) => {
   }
   toast.dismiss(toastId);
   return success;
+};
+
+export const getLectureSummary = async (videoUrl) => {
+  let result = null;
+  try {
+    const response = await apiConnector("POST", LECTURE_SUMMARY, { videoUrl });
+    console.log(response.data.data);
+    result = response.data.data 
+    return result;
+  } catch (error) {
+    console.log("Failed to get Lecture Summary");
+    return result;
+  }
 };

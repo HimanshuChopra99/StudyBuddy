@@ -18,7 +18,6 @@ import {
 import { updateCompletedLectures } from "../../../redux/slices/viewCourseSlice";
 import IconBtn from "../../common/IconBtn";
 import DOMPurify from "dompurify";
-import TypingSummary from "../../common/TypingSummary";
 
 const VideoDetails = () => {
   const { courseId, sectionId, subSectionId } = useParams();
@@ -144,12 +143,22 @@ const VideoDetails = () => {
   const handelSummary = async () => {
     const videoUrl = videoData?.videoUrl;
     setLoading(true);
-    const res = await getLectureSummary(videoUrl);
-    const cleanHtml = DOMPurify.sanitize(
-      res.replace(/```html|```/g, "").trim()
-    );
-    setSummary(cleanHtml);
-    setLoading(false);
+    try {
+      const res = await getLectureSummary(videoUrl);
+      const cleanHtml = DOMPurify.sanitize(
+        res.replace(/```html|```/g, "").trim()
+      );
+      setSummary(cleanHtml);
+    } catch (error) {
+      console.error("Error in generating summary:", error);
+      setSummary(
+        `<p style="color: red; font-weight: 300; font-size: 1rem;">
+    Failed to generate summary. Please try again later.
+  </p>`
+      );
+    } finally {
+      setLoading(false); // This will run whether there's an error or not
+    }
   };
 
   useEffect(() => {}, []);
@@ -258,7 +267,7 @@ const VideoDetails = () => {
       </div>
 
       {/* Summary Section */}
-      <div className="w-full bg-richblack-800 rounded-lg min-h-[100px]">
+      <div className="w-full bg-richblack-800 rounded-lg mx-auto min-h-[100px]">
         {loading ? (
           <div className="text-richblack-50 text-lg px-6 py-6 font-mono whitespace-nowrap overflow-hidden w-full h-[100px] animate-typewriter-loop rounded-lg shimmer">
             Generating summary for you...
@@ -266,7 +275,7 @@ const VideoDetails = () => {
         ) : (
           summary && (
             <div
-              className="prose prose-invert max-w-none px-6 py-6 list-disc marker:text-white space-y-2"
+              className="prose prose-invert max-w-none px-6 py-6 list-disc space-y-2"
               dangerouslySetInnerHTML={{ __html: summary }}
             />
           )

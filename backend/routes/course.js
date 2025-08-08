@@ -13,7 +13,7 @@ const {
   editCourse,
   getInstructorCourses,
   deleteCourse,
-} = require("../controllers/Course")
+} = require("../controllers/course")
 
 
 // Categories Controllers Import
@@ -21,14 +21,14 @@ const {
   createCategory,
   categoryPageDetails,
   getAllCategories,
-} = require("../controllers/Category")
+} = require("../controllers/category")
 
 // Sections Controllers Import
 const {
   createSection,
   updateSection,
   deleteSection,
-} = require("../controllers/Section")
+} = require("../controllers/section")
 
 // Sub-Sections Controllers Import
 const {
@@ -42,7 +42,7 @@ const {
   createRating,
   getAverageRating,
   getAllRating,
-} = require("../controllers/RatingAndReview")
+} = require("../controllers/ratingAndReview")
 
 const {
   updateCourseProgress

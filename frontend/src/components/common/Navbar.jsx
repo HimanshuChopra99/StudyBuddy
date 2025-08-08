@@ -7,7 +7,7 @@ import { FiShoppingCart, FiMenu, FiX } from "react-icons/fi";
 import { IoIosArrowDown } from "react-icons/io";
 import { apiConnector } from "../../services/apiconnector";
 import { categories } from "../../services/apis";
-import ProfileDropdown from "../core/Auth/ProfileDropDown";
+import ProfileDropdown from "../core/Auth/ProfileDropdown";
 import HamburgerDrawer from "./Hamburger";
 
 function Navbar() {

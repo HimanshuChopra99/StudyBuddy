@@ -8,7 +8,7 @@ const {
   updateDisplayPicture,
   getEnrolledCourses,
   instructorDashboard,
-} = require("../controllers/Profile");
+} = require("../controllers/profile");
 
 // Delet User Account
 router.delete("/deleteAccount", auth, deleteAccount);

@@ -22,9 +22,6 @@ export function sendOtp(email, navigate) {
         email,
         checkUserPresent: true,
       });
-      console.log("SENDOTP API RESPONSE............", response);
-
-      console.log(response.data.success);
 
       if (!response.data.success) {
         throw new Error(response.data.message);
@@ -65,8 +62,6 @@ export function signUp(
         otp,
       });
 
-      console.log("SIGNUP API RESPONSE............", response);
-
       if (!response.data.success) {
         toast.error("You Enter Wrong OTP. Please try again.");
       }
@@ -92,8 +87,6 @@ export function login(email, password, navigate) {
         email,
         password,
       });
-
-      console.log("LOGIN API RESPONSE............", response);
 
       if (!response.data.success) {
         throw new Error(response.data.message);
@@ -138,8 +131,6 @@ export function getPasswordResetToken(email, setEmailSent) {
         email,
       });
 
-      console.log("RESET PASSWORD TOKEN RESPONSE....", response);
-
       if (!response.data.success) {
         throw new Error(response.data.message);
       }
@@ -163,9 +154,7 @@ export function resetPassword(password, confirmPassword, token, navigate) {
         confirmPassword,
         token,
       });
-
-      console.log("RESET Password RESPONSE ... ", response);
-
+      
       if (!response.data.success) {
         throw new Error(response.data.message);
       }

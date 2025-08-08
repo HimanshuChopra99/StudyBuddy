@@ -45,8 +45,6 @@ function CourseDetailsCard({ course, setConfirmationModal, handleBuyCourse }) {
     });
   };
 
-  // console.log("Student already enrolled ", course?.studentsEnroled, user?._id)
-
   return (
     <>
       <div
@@ -72,7 +70,6 @@ function CourseDetailsCard({ course, setConfirmationModal, handleBuyCourse }) {
                   : handleBuyCourse
               }
             >
-            {console.log(course)}
               {user && course?.studentsEnrolled.includes(user?._id)
                 ? "Go To Course"
                 : "Buy Now"}

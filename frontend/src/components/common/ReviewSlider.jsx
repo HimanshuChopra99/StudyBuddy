@@ -34,7 +34,6 @@
       })();
     }, []);
 
-    // console.log(reviews)
 
     return (
       <div className="text-white w-10/12 m-auto">

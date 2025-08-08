@@ -37,8 +37,6 @@ export default function CoursesTable({ courses, setCourses }) {
     setLoading(false);
   };
 
-  // console.log("All Course ", courses)
-
   if (loading) {
     return <div className="custom-loader"></div>;
   }
@@ -105,12 +103,12 @@ export default function CoursesTable({ courses, setCourses }) {
                         Drafted
                       </p>
                     ) : (
-                      <p className="flex w-fit flex-row items-center gap-2 rounded-full bg-richblack-700 px-2 py-[2px] text-[12px] font-medium text-green-400">
+                      <div className="flex w-fit flex-row items-center gap-2 rounded-full bg-richblack-700 px-2 py-[2px] text-[12px] font-medium text-green-400">
                         <div className="flex h-3 w-3 items-center justify-center rounded-full bg-green-400 text-richblack-900">
                           <FaCheck size={8} />
                         </div>
                         Published
-                      </p>
+                      </div>
                     )}
                   </div>
                 </Td>

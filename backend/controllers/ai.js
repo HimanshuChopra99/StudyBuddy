@@ -31,9 +31,7 @@ exports.generateThumbnail = async (req, res) => {
        Return only the enhanced AI-ready prompt — no extra commentary or formatting.
       `;
   const geminiResult = await model.generateContent(geminiInput);
-  console.log(geminiResult);
   const enhancedPrompt = geminiResult.response.text().trim();
-  console.log("Enhanced Prompt:", enhancedPrompt);
 
   const width = 1280;
   const height = 720;
@@ -43,8 +41,6 @@ exports.generateThumbnail = async (req, res) => {
   const imageUrl = `https://pollinations.ai/p/${encodeURIComponent(
     enhancedPrompt
   )}?width=${width}&height=${height}&seed=${seed}&model=${imgModel}`;
-
-  console.log(imageUrl);
 
   const cloudinaryRes = await uploadImageToCloudinary(
     imageUrl,
@@ -124,7 +120,6 @@ exports.generateThumbnail = async (req, res) => {
 //chat bot
 exports.chatBot = async (req, res) => {
   try {
-    console.log(req.body);
     const { message } = req.body;
 
     if (!message) {

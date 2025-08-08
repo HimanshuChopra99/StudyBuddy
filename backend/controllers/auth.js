@@ -91,7 +91,6 @@ exports.signup = async (req, res) => {
       .sort({ createdAt: -1 })
       .limit(1);
 
-    console.log(recentOtp.otp);
     if (recentOtp.length === 0) {
       return res.status(400).json({
         success: false,

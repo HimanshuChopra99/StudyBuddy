@@ -25,7 +25,6 @@ exports.contactUs = async (req, res) => {
       "Your Data send successfully",
       contactUsEmail(email, firstName, lastName, message, phoneNumber)
     );
-    console.log("Email Res ", emailRes);
     return res.json({
       success: true,
       message: "Email send successfully",

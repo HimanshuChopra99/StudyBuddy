@@ -36,7 +36,6 @@ const ChatBot = ({ onClose }) => {
 
     try {
       const result = await chatBot(message, token);
-      console.log(result.data);
       const aiText = result?.data || "No response from AI.";
 
       setMessages((msgs) => [

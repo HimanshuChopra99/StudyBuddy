@@ -29,13 +29,9 @@ exports.createCourse = async (req, res) => {
     // Get thumbnail image from request files
 
     const thumbnail = req.files?.thumbnailImage || req.body.thumbnailImage;
-    console.log(thumbnail);
     // Convert the tag and instructions from stringified Array to Array
     const tag = JSON.parse(_tag);
     const instructions = JSON.parse(_instructions);
-
-    console.log("tag", tag);
-    console.log("instructions", instructions);
 
     // Check if any of the required fields are missing
     if (
@@ -264,7 +260,6 @@ exports.getFullCourseDetails = async (req, res) => {
       userId: userId,
     });
 
-    console.log("courseProgressCount : ", courseProgressCount);
     if (!courseDetails) {
       return res.status(400).json({
         success: false,
@@ -276,14 +271,12 @@ exports.getFullCourseDetails = async (req, res) => {
     courseDetails.courseContent.forEach((content) => {
       content.subSection.forEach((subSection) => {
         const timeDurationInSeconds = parseInt(subSection.timeDuration);
-        console.log("sdaskdjao", subSection.timeDuration);
         totalDurationInSeconds += timeDurationInSeconds;
       });
     });
 
     const totalDuration = convertSecondsToDuration(totalDurationInSeconds);
 
-    console.log(courseDetails);
     return res.status(200).json({
       success: true,
       data: {
@@ -465,7 +458,6 @@ exports.editCourse = async (req, res) => {
 
     // === Handle thumbnail upload ===
     if (req.files && req.files.thumbnailImage || req.body.thumbnailImage) {
-      console.log("thumbnail update");
       const thumbnail = req.files?.thumbnailImage || req.body.thumbnailImage;
       const thumbnailImage = await uploadImageToCloudinary(
         thumbnail,

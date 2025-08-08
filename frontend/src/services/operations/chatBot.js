@@ -14,7 +14,6 @@ export const chatBot = async (message, token) => {
         Authorization: `Bearer ${token}`,
       }
     );
-    console.log(response.data);
     result = response.data;
   } catch (error) {
     console.log("Error in Ai chatbot response..........", error.message);

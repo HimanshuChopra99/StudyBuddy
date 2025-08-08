@@ -13,7 +13,7 @@ const {
   editCourse,
   getInstructorCourses,
   deleteCourse,
-} = require("../controllers/Course")
+} = require("../controllers/course")
 
 
 // Categories Controllers Import

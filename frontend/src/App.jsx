@@ -65,18 +65,18 @@ function App() {
     <div className="w-screen min-h-screen bg-richblack-900 flex flex-col font-inter">
       <Navbar />
       <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="catalog/:catalogName" element={<Catalog />} />
-        <Route path="courses/:courseId" element={<CourseDetails />} />
-
         <Route
-          path="signup"
+          path="/"
           element={
             <OpenRoute>
-              <Signup />
+              <Home />
             </OpenRoute>
           }
         />
+        <Route path="catalog/:catalogName" element={<Catalog />} />
+        <Route path="courses/:courseId" element={<CourseDetails />} />
+
+        
         <Route
           path="login"
           element={

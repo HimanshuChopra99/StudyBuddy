@@ -41,7 +41,7 @@ exports.otpEmailTemplate = (name, otp) => {
           .otp-box {
               font-size: 24px;
               font-weight: bold;
-              color: #000000;
+              color: black;
               background-color: #FFD60A;
               padding: 10px 20px;
               display: inline-block;

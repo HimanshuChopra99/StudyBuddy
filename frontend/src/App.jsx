@@ -79,6 +79,14 @@ function App() {
           }
         />
         <Route
+          path="signup"
+          element={
+            <OpenRoute>
+              <Signup />
+            </OpenRoute>
+          }
+        />
+        <Route
           path="forgot-password"
           element={
             <OpenRoute>

@@ -54,12 +54,6 @@ function App() {
     }
   };
 
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (isTokenExpired(token)) {
-      logout();
-    }
-  }, []);
 
   return (
     <div className="w-screen min-h-screen bg-richblack-900 flex flex-col font-inter">
@@ -68,7 +62,6 @@ function App() {
         <Route path="/"element={<Home />}/>
         <Route path="catalog/:catalogName" element={<Catalog />} />
         <Route path="courses/:courseId" element={<CourseDetails />} />
-
         
         <Route
           path="login"

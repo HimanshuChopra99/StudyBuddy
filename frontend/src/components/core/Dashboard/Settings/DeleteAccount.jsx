@@ -1,19 +1,22 @@
-import { FiTrash2 } from "react-icons/fi"
-import { useDispatch, useSelector } from "react-redux"
-import { useNavigate } from "react-router-dom"
+import { FiTrash2 } from "react-icons/fi";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
-import { deleteProfile } from "../../../../services/operations/SettingsAPI"
+import { deleteProfile } from "../../../../services/operations/SettingsAPI";
+import ConfirmationModal from "../../../common/ConfirmationModal";
+import { useState } from "react";
 
 export default function DeleteAccount() {
-  const { token } = useSelector((state) => state.auth)
-  const dispatch = useDispatch()
-  const navigate = useNavigate()
+  const { token } = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const [modalData, setModalData] = useState(null);
 
   async function handleDeleteAccount() {
     try {
-      dispatch(deleteProfile(token, navigate))
+      dispatch(deleteProfile(token, navigate));
     } catch (error) {
-      console.log("ERROR MESSAGE - ", error.message)
+      console.log("ERROR MESSAGE - ", error.message);
     }
   }
 
@@ -34,15 +37,40 @@ export default function DeleteAccount() {
               permanent and will remove all the contain associated with it.
             </p>
           </div>
-          <button
+          {/* <button
             type="button"
             className="w-fit cursor-pointer italic text-pink-300"
             onClick={handleDeleteAccount}
           >
             I want to delete my account.
+          </button> */}
+          <button
+            type="button"
+            className="w-fit cursor-pointer italic text-pink-300"
+            onClick={() =>
+              setModalData({
+                text1: "Are you sure?",
+                text2:
+                  "This action is permanent and will delete your account and all associated data.",
+                btn1Text: "Delete",
+                btn2Text: "Cancel",
+                btn1Handler: () => handleDeleteAccount(),
+                btn2Handler: () => setModalData(null),
+              })
+            }
+          >
+            I want to delete my account.
           </button>
+
+          {/* Render modal */}
+          {modalData && (
+            <ConfirmationModal
+              modalData={modalData}
+              setModalData={setModalData}
+            />
+          )}
         </div>
       </div>
     </>
-  )
+  );
 }

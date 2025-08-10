@@ -160,6 +160,14 @@ exports.login = async (req, res) => {
       });
     }
 
+    //don't login if user schedule for delete the account
+    if(user.isScheduledForDeletion) {
+      res.status(400).json({
+        success: false,
+        msg: "Your account is scheduled for deletion. Please contact support to restore it"
+      })
+    }
+
     //compare password
     const isPasswordMatch = await bcrypt.compare(password, user.password);
 

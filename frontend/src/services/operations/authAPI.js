@@ -104,7 +104,7 @@ export function login(email, password, navigate) {
       navigate("/dashboard/my-profile");
     } catch (error) {
       console.log("LOGIN API ERROR............", error);
-      toast.error("Login Failed");
+      toast.error(error?.response?.data?.msg || "Login Failed");
     }
     dispatch(setLoading(false));
     toast.dismiss(toastId);
@@ -154,7 +154,7 @@ export function resetPassword(password, confirmPassword, token, navigate) {
         confirmPassword,
         token,
       });
-      
+
       if (!response.data.success) {
         throw new Error(response.data.message);
       }
